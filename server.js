@@ -7,7 +7,7 @@ session = require('client-sessions'),
 bodyParser = require('body-parser');
 
 //local imports
-var userbase = require('./userbase');
+var userbase = require('./private_modules/userbase');
 
 //Globals
 var port = 8080;
