@@ -6,6 +6,9 @@ path = require('path'),
 session = require('client-sessions'),
 bodyParser = require('body-parser');
 
+//local imports
+var userbase = require('./userbase');
+
 //Globals
 var port = 8080;
 var app = express();
@@ -32,9 +35,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.post('/joinGame', function(request, response) {
-    request.session.user = request.body.username;
+    var username = request.body.username;
+    userbase.addUser(username, teamNum);
+    console.log(userbase);
+
+    request.session.user = username;
     request.session.team = teamNum; // sets team number to 1 or 2
     teamNum = teamNum %  2 + 1; // sets the next team number to opposite what it is
+
     response.sendFile(path.join(__dirname + '/client.html'));
 });
 
