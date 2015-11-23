@@ -7,7 +7,6 @@
     $(document).ready(function() {
         buildGameBoard(ROWS, COLS);
         connection.getTeam(function(team) {
-            console.log("HEE" + team);
             $("#team_name").html("Team " + team);
         });
     });
