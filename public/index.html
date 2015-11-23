@@ -4,13 +4,13 @@
     <title>Battleship</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script type="text/javascript" src="connection.js"></script>
-    <script type="text/javascript" src="gameboard.js"></script>
     <link href="style.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
-    <h1 id="team_name"></h1>
-    <div id="gametable">
-    </div>
+    <h1>Welcome to battleship</h1>
+    <form method="POST" action="joinGame">
+        Username:<input type="text" name="username"><br>
+        <input type="submit" value="Join The Game">
+    </form>
 </body>
 </html>

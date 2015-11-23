@@ -1,49 +1,47 @@
 //Imports
-var http = require('http'),
-path = require("path"),
-url = require("url"),
-filesys = require("fs");
+var express = require('express'),
+fs = require('fs'),
+url = require('url'),
+path = require('path'),
+session = require('client-sessions'),
+bodyParser = require('body-parser');
 
 //Globals
-var port = 8080,
-DEBUG_MODE = 1; // Debug mode 1 is on, 0 is off
+var port = 8080;
+var app = express();
+var teamNum = 1;
 
-function homePage(request, response) {
-  response.write('Hello World!');
-}
+//App config
+app.use(session({
+  secret: 'cat battleship',
+  cookieName: 'session',
+  duration: 30 * 60 * 1000,
+  activeDuration: 5 * 60 * 1000,
+}));
 
-//404 page if a file is not found by the server
-function respondWith404(response) {
-    response.writeHead(404, {"Content-Type": "text/plain"});
-    response.write("404 Not Found\n");  
-    response.end();
-}
+/*
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});*/
 
-http.createServer(function(request,response) {
-    var url = request.url;
-    var full_path = path.join(process.cwd(),request.url);
-    console.log(url);
-    filesys.exists(full_path, function(exists) {
-        if(exists) {
-            if(url == "" ||  url == "/") {
-                full_path += "index.html";
-            }
-            filesys.readFile(full_path, "binary", function(err, file) {
-                if (err) {  
-                     response.writeHeader(500, {"Content-Type": "text/plain"});  
-                     response.write(err + "\n");  
-                     response.end();  
-                 }  
-                 else{
-                    response.writeHeader(200);
-                    response.write(file, "binary");  
-                    response.end();
-                } 
-            });
-        } else { // file does not exists
-            respondWith404(response);
-        }
-    });
+app.use(express.static(path.join(__dirname, 'public'))); // uses static files in the public directory
+app.use( bodyParser.json() );
+app.use(bodyParser.urlencoded({ extended: true })); 
 
-}).listen(port);
-console.log("Listening on port %s", port);
+
+app.post('/joinGame', function(request, response) {
+    request.session.user = request.body.username;
+    request.session.team = teamNum; // sets team number to 1 or 2
+    teamNum = teamNum %  2 + 1; // sets the next team number to opposite what it is
+    response.sendFile(path.join(__dirname + '/client.html'));
+});
+
+app.get('/getTeam', function(request, response) {
+    response.send(200, request.session.team);
+});
+
+var server = app.listen(port, function() {
+  console.log('Battleship server listening at %s', port);
+});
