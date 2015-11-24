@@ -3,7 +3,7 @@ module.exports = {
     userbase: {},
 
     addUser: function(user, team) {
-        if(this.userExists(user) == false) {
+        if(this.containsUser(user) == false) {
             this.userbase[user] = team;
         }
     },
@@ -16,7 +16,7 @@ module.exports = {
         }
     },
 
-    userExists: function(userInQuestion) {
+    containsUser: function(userInQuestion) {
         for(var user in this.userbase) {
             if(user == userInQuestion) {
                 return true;
