@@ -26,6 +26,10 @@ app.use(express.static(path.join(__dirname, 'public'))); // uses static files in
 app.use( bodyParser.json() );
 app.use(bodyParser.urlencoded({ extended: true })); 
 
+/*
+Home page logic. If their session cookies state that they have already logged in, take them to their 
+team page. Otherwise, take them to the homepage.
+*/
 app.get('', function(request, response) {
     if(userbase.containsUser(request.session.user)) {
         response.sendFile(path.join(__dirname + '/client.html'));
@@ -46,7 +50,7 @@ app.post('/joinGame', function(request, response) {
     console.log(userbase.containsUser(username));
     if(userbase.containsUser(username)) {
       // either redirct them to home page with error message, or redirect them to proper
-      // team page (assuming they are the correct user)
+      // team page ( and just assume they are the correct user)
       response.sendFile(path.join(__dirname + '/index.html'));
     } else {
       userbase.addUser(username, teamNum);
