@@ -1,133 +1,118 @@
-/*
-WORK IN PROGRESS
+module.exports = {
 
-TODO: Keep track of ships.
-*/
+    ROWS: 10,
+    COLS: 10,
 
-Battleship = function(){
-    var xhr = new XMLHttpRequest();
-    var url = "http://127.0.0.1:8080";
-    var game_callback = function(){};
-    //var timeout = 2;
-    var ROWS = 10;
-    var COLS = 10;
+    teamOneGameBoard: {},
+    teamTwoGameBoard: {},
+    teamOneShips: {},
+    teamTwoShips: {},
 
-    var teamOneGameBoard;;
-    var teamTwoGameBoard;
-    var teamOneShips;
-    var teamTwoShips;
-
-    var sea = 0;
-    var boat = 1;
+    sea: 0,
 
 
-    this.startNewGame = function() {
+    startNewGame: function() {
         setBoard(1);
         setBoard(2);
         setUpShips(1);
         setUpShips(2);
-    }
+    },
 
-    this.setBoard = function(teamNum) {
-        var gameBoard = chooseGameBoard(teamNum);
-        for (var i = 0; i < ROWS; i++) {
+    setBoard: function(teamNum) {
+        var gameBoard = this.chooseGameBoard(teamNum);
+        for (var i = 0; i < this.ROWS; i++) {
             var row = [];
-            for (var j = 0; j < COLUMNS; j++) {
-                row.push({type: sea, available: 1});
+            for (var j = 0; j < this.COLUMNS; j++) {
+                row.push({type: this.sea, available: 1});
             }
             gameBoard.push(row);
         }
-    }
+    },
 
 
 
-    this.isGameOver = function() {
+    isGameOver: function() {
 
-    }
+    },
 
-    this.isSpotAvailable = function(teamNum, row, column) {
+    isSpotAvailable: function(teamNum, row, column) {
         return gameBoard[row][column].available === 1;
-    }
+    },
 
     // TODO: what if space is not available?
-    this.takeShot = function(teamNum, row, column) {
-        var gameBoard = chooseGameBoard(teamNum);
+    takeShot: function(teamNum, row, column) {
+        var gameBoard = this.chooseGameBoard(teamNum);
         gameBoard[row][column].available = 0;
-        if (gameBoard[row][column].type == boat) {
+        if (gameBoard[row][column].type !== 0) {
             // update boats state
         }
-    }
+    },
 
-    this.getBoardState = function(teamNum) {
-        var gameBoard = chooseGameBoard(teamNum);
+    getBoardState: function(teamNum) {
+        var gameBoard = this.chooseGameBoard(teamNum);
         return gameBoard;
-    }
+        // Actually return json 100 element array?
+    },
 
-    this.getNumberOfRemainingShips = function(teamNum) {
+    getNumberOfRemainingShips: function(teamNum) {
 
-    }
+    },
 
-    this.setUpShips = function(teamNum) {
-        var gameBoard = chooseGameBoard(teamNum);
-        placeShip(gameBoard, 5);
-        placeShip(gameBoard, 4);
-        placeShip(gameBoard, 3);
-        placeShip(gameBoard, 3);
-        placeShip(gameBoard, 2);
-    }
+    shipSunk: function() {
 
-    this.placeShip = function(gameBoard, size) {
-        var direction = Math.floor(2 * Math.random());
-        var maxRight = ROW;
-        var maxBottom = COLUMN;
-        if (direction == 0) { // up and down facing ship
-            maxBottom = COLUMN - size;
+    },
+
+    setUpShips: function(teamNum) {
+        var gameBoard = this.chooseGameBoard(teamNum);
+        placeShip(gameBoard, 5, 1);
+        placeShip(gameBoard, 4, 2);
+        placeShip(gameBoard, 3, 3);
+        placeShip(gameBoard, 3, 4);
+        placeShip(gameBoard, 2, 5);
+    },
+
+    placeShip: function(gameBoard, size, boatNum) {
+        var orientation = Math.floor(2 * Math.random());
+        var maxRight = this.ROW;
+        var maxBottom = this.COLUMN;
+        if (orientation == 0) { // up and down facing ship
+            maxBottom = this.COLUMN - size;
         } else { // left and right facing ship
-            maxRight = ROW - size;
+            maxRight = this.ROW - size;
         }
         var row = Math.floor(maxRight * Math.random());
         var column = Math.floor(maxBottom * Math.random());
-        var properlyPlaced = false;
 
-        if (direction == 0) {
-            properlyPlaced = placeVerticalShip(gameBoard, row, column, size);
-        } else {
-            properlyPlaced = placeHorizontalShip(gameBoard, row, column, size);
-        }
+        var properlyPlaced = this.placeShip(gameBoard, row, column, size, boatNum, orientation);
+        
         if(!properlyPlaced) {  // there was a collision
-            placeShip(gameBoard, size);
+            this.placeShip(gameBoard, size);
         }
-    }
+    },
 
-    this.placeVerticalShip = function(gameBoard, x, y, size) {
+    placeShip: function(gameBoard, x, y, size, boatNum, orientation) {
         for(int i = 0; i < size; i++) {  // check no current ship already
-            if (gameBoard[x][y + i].type === ship) {
+            if (gameBoard[x][y + i].type !== 0) { // not an available spot
                 return false;
             } 
         }
         for(int i = 0; i < size; i++) {
-            gameBoard[x][y + i].type = ship;
+            var yCoordinate = y;
+            var xCoordinate = x;
+            if (orientation == 0) {
+                yCoordinate = y + i;
+            } else {
+                xCoordinate = x + i;
+            }
+            gameBoard[xCoordinate][yCoordinate].type = boatNum;
         }
         return true;
-    }
+    },
 
-    this.placeHorizontalShip = function(gameBoard, x, y, size) {
-        for(int i = 0; i < size; i++) {  // check no current ship already
-            if (gameBoard[x + i][y].type === ship) {
-                return false;
-            } 
-        }
-        for(int i = 0; i < size; i++) {
-            gameBoard[x + i][y].type = ship;
-        }
-        return true;
-    }
-
-    this.chooseGameBoard = function(teamNum) {
+    chooseGameBoard: function(teamNum) {
         if (teamNum == 1) {
-            return teamOneGameBoard;
+            return this.teamOneGameBoard;
         } else {
-            return teamTwoGameBoard;
+            return this.teamTwoGameBoard;
         }
     }
-}
