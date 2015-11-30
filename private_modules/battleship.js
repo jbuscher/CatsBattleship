@@ -8,7 +8,7 @@ module.exports = {
     teamOneShips: {},
     teamTwoShips: {},
 
-    sea: 0,
+    sea: -1,
 
 
     startNewGame: function() {
@@ -16,6 +16,8 @@ module.exports = {
         setBoard(2);
         setUpShips(1);
         setUpShips(2);
+        this.teamOneShips = {5, 4, 3, 3, 2};
+        this.teamTwoShips = {5, 4, 3, 3, 2};
     },
 
     setBoard: function(teamNum) {
@@ -32,7 +34,7 @@ module.exports = {
 
 
     isGameOver: function() {
-
+        return this.getNumberOfRemainingShips(1) === 0 || this.getNumberOfRemainingShips(2) === 0;
     },
 
     isSpotAvailable: function(teamNum, row, column) {
@@ -43,32 +45,58 @@ module.exports = {
     takeShot: function(teamNum, row, column) {
         var gameBoard = this.chooseGameBoard(teamNum);
         gameBoard[row][column].available = 0;
-        if (gameBoard[row][column].type !== 0) {
-            // update boats state
+        var shotLocationType = gameBoard[row][column].type;
+        if (shotLocationType !== this.sea) {
+            var ships = teamNum === 1? this.teamOneShips: this.teamTwoShips;
+            ships[shotLocationsType]--;
         }
     },
 
-    getBoardState: function(teamNum) {
+    getBoardAvailabilities: function(teamNum) {
         var gameBoard = this.chooseGameBoard(teamNum);
-        return gameBoard;
-        // Actually return json 100 element array?
+        var availabilitiesArray = {};
+        for (var i = 0; i < this.ROWS); i++) {
+            for (var j = 0; j < this.COLUMNS; j++) {
+                availabilitiesArray.push(gameBoard[i][j].available);
+            }
+        }
+        return JSON.stringify(availabilitiesArray);
+    },
+
+    getBoardShipLocations: function(teamNum) {
+        var gameBoard = this.chooseGameBoard(teamNum);
+        var availabilitiesArray = {};
+        for (var i = 0; i < this.ROWS); i++) {
+            for (var j = 0; j < this.COLUMNS; j++) {
+                availabilitiesArray.push(gameBoard[i][j].type);
+            }
+        }
+        return JSON.stringify(availabilitiesArray);
     },
 
     getNumberOfRemainingShips: function(teamNum) {
-
+        var total = 0;
+        var ships = teamNum === 1? this.teamOneShips: this.teamTwoShips;
+        for (var i = 0; i < ships.length; i++) {
+            if (ships[i] > 0) {
+                total++;
+            }
+        }
+        return total;
     },
 
-    shipSunk: function() {
-
+    shipSunk: function(teamNum, shipNum) {
+        var ships = teamNum === 1? this.teamOneShips: this.teamTwoShips;
+        return ships[shipNum] === 0;
     },
 
     setUpShips: function(teamNum) {
         var gameBoard = this.chooseGameBoard(teamNum);
-        placeShip(gameBoard, 5, 1);
-        placeShip(gameBoard, 4, 2);
+        placeShip(gameBoard, 5, 0);
+        placeShip(gameBoard, 4, 1);
+        placeShip(gameBoard, 3, 2);
         placeShip(gameBoard, 3, 3);
-        placeShip(gameBoard, 3, 4);
-        placeShip(gameBoard, 2, 5);
+        placeShip(gameBoard, 2, 4);
     },
 
     placeShip: function(gameBoard, size, boatNum) {
@@ -91,12 +119,10 @@ module.exports = {
     },
 
     placeShip: function(gameBoard, x, y, size, boatNum, orientation) {
-        for(int i = 0; i < size; i++) {  // check no current ship already
-            if (gameBoard[x][y + i].type !== 0) { // not an available spot
-                return false;
-            } 
+        if (!this.checkAvailability(gameBoard, x, y, size, orientation)) {
+            return false;
         }
-        for(int i = 0; i < size; i++) {
+        for(var i = 0; i < size; i++) {
             var yCoordinate = y;
             var xCoordinate = x;
             if (orientation == 0) {
@@ -108,6 +134,22 @@ module.exports = {
         }
         return true;
     },
+
+    checkAvailability: function(gameBoard, x, y, size, orientation) {
+        for(var i = 0; i < size; i++) {  // check no current ship already
+            var yCoordinate = y;
+            var xCoordinate = x;
+            if (orientation == 0) {
+                yCoordinate = y + i;
+            } else {
+                xCoordinate = x + i;
+            }
+            if (gameBoard[xCoordinate][yCoordinate].type !== this.sea) { // not an available spot
+                return false;
+            } 
+        }
+        return true;
+    }
 
     chooseGameBoard: function(teamNum) {
         if (teamNum == 1) {
