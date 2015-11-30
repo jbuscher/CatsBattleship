@@ -16,8 +16,8 @@ module.exports = {
         setBoard(2);
         setUpShips(1);
         setUpShips(2);
-        this.teamOneShips = {5, 4, 3, 3, 2};
-        this.teamTwoShips = {5, 4, 3, 3, 2};
+        this.teamOneShips = [5, 4, 3, 3, 2];
+        this.teamTwoShips = [5, 4, 3, 3, 2];
     },
 
     setBoard: function(teamNum) {
@@ -55,7 +55,7 @@ module.exports = {
     getBoardAvailabilities: function(teamNum) {
         var gameBoard = this.chooseGameBoard(teamNum);
         var availabilitiesArray = {};
-        for (var i = 0; i < this.ROWS); i++) {
+        for (var i = 0; i < this.ROWS; i++) {
             for (var j = 0; j < this.COLUMNS; j++) {
                 availabilitiesArray.push(gameBoard[i][j].available);
             }
@@ -66,7 +66,7 @@ module.exports = {
     getBoardShipLocations: function(teamNum) {
         var gameBoard = this.chooseGameBoard(teamNum);
         var availabilitiesArray = {};
-        for (var i = 0; i < this.ROWS); i++) {
+        for (var i = 0; i < this.ROWS; i++) {
             for (var j = 0; j < this.COLUMNS; j++) {
                 availabilitiesArray.push(gameBoard[i][j].type);
             }
@@ -149,7 +149,7 @@ module.exports = {
             } 
         }
         return true;
-    }
+    },
 
     chooseGameBoard: function(teamNum) {
         if (teamNum == 1) {
@@ -157,4 +157,5 @@ module.exports = {
         } else {
             return this.teamTwoGameBoard;
         }
-    }
+    },
+}

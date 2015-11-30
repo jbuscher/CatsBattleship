@@ -8,7 +8,7 @@ bodyParser = require('body-parser');
 
 //local imports
 var userbase = require('./private_modules/userbase');
-//var gameboard = require('./private_modules/battleship.js');
+var gameboard = require('./private_modules/battleship.js');
 
 //Globals
 var port = 8080;
