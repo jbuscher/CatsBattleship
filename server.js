@@ -7,7 +7,6 @@ session = require('client-sessions'),
 bodyParser = require('body-parser');
 
 //local imports
-var userbase = require('./private_modules/userbase');
 var gameboard = require('./private_modules/battleship.js');
 
 //Globals
@@ -26,41 +25,17 @@ app.use(express.static(path.join(__dirname, 'public'))); // uses static files in
 app.use( bodyParser.json() );
 app.use(bodyParser.urlencoded({ extended: true })); 
 
+
 /*
-Home page logic. If their session cookies state that they have already logged in, take them to their 
-team page. Otherwise, take them to the homepage.
+Alternates the assignment of a team to the user, remembers user via cookies
 */
 app.get('', function(request, response) {
-    if(userbase.containsUser(request.session.user)) {
-        response.sendFile(path.join(__dirname + '/client.html'));
-    } else {
-        response.sendFile(path.join(__dirname + '/index.html'));
-    }
-});
+  if(!request.session.team) {
+    request.session.team = teamNum; // sets team number to 1 or 2
+    teamNum = teamNum %  2 + 1; // sets the next team number to opposite what it is
 
-
-/*
-Takes a join game post request from the form on the splash screen of our website. Checks
-if the username exists, if it does, returns them to the homepage with error message. Otherwise
-adds them to the userbase, starts a user session, and redirects them to their team page.
-TODO: Check if user exists
-*/
-app.post('/joinGame', function(request, response) {
-    var username = request.body.username;
-    console.log(userbase.containsUser(username));
-    if(userbase.containsUser(username)) {
-      // either redirct them to home page with error message, or redirect them to proper
-      // team page ( and just assume they are the correct user)
-      response.sendFile(path.join(__dirname + '/index.html'));
-    } else {
-      userbase.addUser(username, teamNum);
-
-      request.session.user = username;
-      request.session.team = teamNum; // sets team number to 1 or 2
-      teamNum = teamNum %  2 + 1; // sets the next team number to opposite what it is
-
-      response.sendFile(path.join(__dirname + '/client.html'));
-    }
+  }
+  response.sendFile(path.join(__dirname + '/client.html'));
 });
 
 app.get('/getTeam', function(request, response) {
@@ -70,7 +45,7 @@ app.get('/getTeam', function(request, response) {
 /*
 TODO FOR MATTIE, fill in with gameboard stuff
 */
-app.get('/boardState', function(request, response) {
+app.post('/boardState', function(request, response) {
 
 });
 
