@@ -6,7 +6,7 @@
 
     $(document).ready(function() {
         buildGameBoard(ROWS, COLS, "#teamBoard");
-        buildGameBoard(5, 5, "#enemyBoard");
+        buildGameBoard(ROWS, COLS, "#enemyBoard");
         $("#enemyBoard").show();
         $("#teamBoard").hide();
 
@@ -20,11 +20,13 @@
 
     function buildGameBoard(rows, cols, divName) {
         var tableDiv = $(divName);
+        var count = 1;
         $($( "<table>" )).appendTo(tableDiv);
         for(var i = 0; i < rows; i++) {
             $($( "<tr>" )).appendTo(tableDiv);
             for(var j = 0; j < cols; j++) {
-                $($( "<td></tr>" )).appendTo(tableDiv);
+                $($( "<td id=\"" + divName + count + "\"></tr>" )).appendTo(tableDiv);
+                count++;
             }
             $($( "</tr>" )).appendTo(tableDiv);
         }
