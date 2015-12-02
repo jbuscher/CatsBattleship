@@ -42,9 +42,11 @@
     function changeRadioButton() {
         if ($("input[name='boardChoice']:checked").val() == 'teamBoardButton') {
             $("#teamBoard").show();
+            $("#enemyBoard").hide();
         }
         if ($("input[name='boardChoice']:checked").val() == 'enemyBoardButton') {
             $("#teamBoard").hide();
+            $("#enemyBoard").show();
         }
     }
 
