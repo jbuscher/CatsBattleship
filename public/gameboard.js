@@ -5,8 +5,8 @@
     var connection = new Connection;
 
     $(document).ready(function() {
-        buildGameBoard(ROWS, COLS, "#teamBoard");
-        buildGameBoard(ROWS, COLS, "#enemyBoard");
+        buildGameBoard(ROWS, COLS, "teamBoard");
+        buildGameBoard(ROWS, COLS, "enemyBoard");
         $("#enemyBoard").show();
         $("#teamBoard").hide();
 
@@ -14,23 +14,29 @@
             $("#team_name").html("Team " + team);
         });
 
-
+        for(var i = 1; i <= ROWS*COLS; i++) {
+            $("#enemyBoard" + i).click(function() {
+                console.log("click" + this.id);
+            });
+        }
         $('input:radio[name=boardChoice]').change(changeRadioButton);
     });
 
     function buildGameBoard(rows, cols, divName) {
-        var tableDiv = $(divName);
+        var tableDiv = $("#" + divName);
         var count = 1;
-        $($( "<table>" )).appendTo(tableDiv);
+        var htmlString = "";
+        htmlString += "<table>";
         for(var i = 0; i < rows; i++) {
-            $($( "<tr>" )).appendTo(tableDiv);
+            htmlString += "<tr>";
             for(var j = 0; j < cols; j++) {
-                $($( "<td id=\"" + divName + count + "\"></tr>" )).appendTo(tableDiv);
+                htmlString += "<td id=\"" + divName + count + "\"></td>";
                 count++;
             }
-            $($( "</tr>" )).appendTo(tableDiv);
+            htmlString += "</tr>";
         }
-        $($( "</table>" )).appendTo(tableDiv);
+        htmlString += "</table>";
+        tableDiv.append(htmlString);
     }
 
     function changeRadioButton() {
