@@ -16,7 +16,7 @@
 
         for(var i = 1; i <= ROWS*COLS; i++) {
             $("#enemyBoard" + i).click(function() {
-                console.log("click" + this.id);
+                $("#" + this.id).html('X');
             });
         }
         $('input:radio[name=boardChoice]').change(changeRadioButton);
@@ -30,7 +30,7 @@
         for(var i = 0; i < rows; i++) {
             htmlString += "<tr>";
             for(var j = 0; j < cols; j++) {
-                htmlString += "<td id=\"" + divName + count + "\"></td>";
+                htmlString += "<td id=\"" + divName + count + "\" class=\"" + divName + "Class\"></td>";
                 count++;
             }
             htmlString += "</tr>";
