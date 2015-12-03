@@ -8,7 +8,8 @@ module.exports = {
     teamOneShips: {},
     teamTwoShips: {},
 
-    sea: -1,
+    NUM_SHIPS: 5,
+    SEA: this.NUM_SHIPS + 1,
 
 
     startNewGame: function() {
@@ -52,26 +53,24 @@ module.exports = {
         }
     },
 
-    getBoardAvailabilities: function(teamNum) {
-        var gameBoard = this.chooseGameBoard(teamNum);
-        var availabilitiesArray = {};
-        for (var i = 0; i < this.ROWS; i++) {
-            for (var j = 0; j < this.COLUMNS; j++) {
-                availabilitiesArray.push(gameBoard[i][j].available);
-            }
-        }
-        return JSON.stringify(availabilitiesArray);
-    },
+    // Returns array of board state.  For each location, divide by 2 to get type
+    // and mod by 1 to get availability.
 
-    getBoardShipLocations: function(teamNum) {
+    // If the spot has already been shot at, availability is 0.
+    // If the spot is available to be shot at, availability is 1.
+
+    // Type number is boat number.
+    // If type is larger than the amount of boats (i.e. if there are 5 boats and you
+    // get 6 for type), then it is sea.
+    getBoardState: function(teamNum) {
         var gameBoard = this.chooseGameBoard(teamNum);
-        var availabilitiesArray = {};
+        var result = {};
         for (var i = 0; i < this.ROWS; i++) {
             for (var j = 0; j < this.COLUMNS; j++) {
-                availabilitiesArray.push(gameBoard[i][j].type);
+                result.push(gameBoard[i][j].available + gameBoard[i][j].type * 2);
             }
         }
-        return JSON.stringify(availabilitiesArray);
+        return JSON.stringify(result);
     },
 
     getNumberOfRemainingShips: function(teamNum) {
