@@ -3,20 +3,20 @@ module.exports = {
     ROWS: 10,
     COLS: 10,
 
-    teamOneGameBoard: {},
-    teamTwoGameBoard: {},
+    teamOneGameBoard: [],
+    teamTwoGameBoard: [],
     teamOneShips: {},
     teamTwoShips: {},
 
     NUM_SHIPS: 5,
-    SEA: this.NUM_SHIPS + 1,
+    SEA: 6,
 
 
     startNewGame: function() {
-        setBoard(1);
-        setBoard(2);
-        setUpShips(1);
-        setUpShips(2);
+        this.setBoard(1);
+        this.setBoard(2);
+        this.setUpShips(1);
+        this.setUpShips(2);
         this.teamOneShips = [5, 4, 3, 3, 2];
         this.teamTwoShips = [5, 4, 3, 3, 2];
     },
@@ -25,8 +25,8 @@ module.exports = {
         var gameBoard = this.chooseGameBoard(teamNum);
         for (var i = 0; i < this.ROWS; i++) {
             var row = [];
-            for (var j = 0; j < this.COLUMNS; j++) {
-                row.push({type: this.sea, available: 1});
+            for (var j = 0; j < this.COLS; j++) {
+               row.push({type: this.SEA, available: 1});
             }
             gameBoard.push(row);
         }
@@ -47,7 +47,7 @@ module.exports = {
         var gameBoard = this.chooseGameBoard(teamNum);
         gameBoard[row][column].available = 0;
         var shotLocationType = gameBoard[row][column].type;
-        if (shotLocationType !== this.sea) {
+        if (shotLocationType !== this.SEA) {
             var ships = teamNum === 1? this.teamOneShips: this.teamTwoShips;
             ships[shotLocationsType]--;
         }
@@ -64,9 +64,9 @@ module.exports = {
     // get 6 for type), then it is sea.
     getBoardState: function(teamNum) {
         var gameBoard = this.chooseGameBoard(teamNum);
-        var result = {};
+        var result = [];
         for (var i = 0; i < this.ROWS; i++) {
-            for (var j = 0; j < this.COLUMNS; j++) {
+            for (var j = 0; j < this.COLS; j++) {
                 result.push(gameBoard[i][j].available + gameBoard[i][j].type * 2);
             }
         }
@@ -91,11 +91,11 @@ module.exports = {
 
     setUpShips: function(teamNum) {
         var gameBoard = this.chooseGameBoard(teamNum);
-        placeShip(gameBoard, 5, 0);
-        placeShip(gameBoard, 4, 1);
-        placeShip(gameBoard, 3, 2);
-        placeShip(gameBoard, 3, 3);
-        placeShip(gameBoard, 2, 4);
+        this.placeShip(gameBoard, 5, 0);
+        this.placeShip(gameBoard, 4, 1);
+        this.placeShip(gameBoard, 3, 2);
+        this.placeShip(gameBoard, 3, 3);
+        this.placeShip(gameBoard, 2, 4);
     },
 
     placeShip: function(gameBoard, size, boatNum) {
