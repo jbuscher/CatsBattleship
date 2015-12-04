@@ -11,4 +11,11 @@ Connection = function(){
             callback(data);
         });
     }
+
+    this.getBoardState = function(callback) {
+        $.post(url + "/boardState", function(data, status) {
+            console.log(data + " " + status);
+            callback(data);
+        })
+    }
 }

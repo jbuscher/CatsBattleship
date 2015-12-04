@@ -14,12 +14,21 @@
             $("#team_name").html("Team " + team);
         });
 
+
+        //Click handler for cells
         for(var i = 1; i <= ROWS*COLS; i++) {
             $("#enemyBoard" + i).click(function() {
                 $("#" + this.id).html('X');
             });
         }
+
+        //change which board is being looked at.
         $('input:radio[name=boardChoice]').change(changeRadioButton);
+
+        //get board state
+        connection.getBoardState(function(boardState) {
+            console.log(boardState);
+        })
     });
 
     function buildGameBoard(rows, cols, divName) {

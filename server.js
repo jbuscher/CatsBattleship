@@ -46,9 +46,12 @@ app.get('/getTeam', function(request, response) {
 TODO FOR MATTIE, fill in with gameboard stuff
 */
 app.post('/boardState', function(request, response) {
-
+  console.log(request.session.team);
+  console.log(gameboard.getBoardState(request.session.team));
+  response.send(gameboard.getBoardState(request.session.team));
 });
 
 var server = app.listen(port, function() {
   console.log('Battleship server listening at %s', port);
+  gameboard.startNewGame();
 });
