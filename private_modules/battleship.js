@@ -16,7 +16,7 @@ module.exports = {
         this.setBoard(1);
         this.setBoard(2);
         this.setUpShips(1);
-        this.setUpShips(2);
+        //this.setUpShips(2);
         this.teamOneShips = [5, 4, 3, 3, 2];
         this.teamTwoShips = [5, 4, 3, 3, 2];
     },
@@ -31,8 +31,6 @@ module.exports = {
             gameBoard.push(row);
         }
     },
-
-
 
     isGameOver: function() {
         return this.getNumberOfRemainingShips(1) === 0 || this.getNumberOfRemainingShips(2) === 0;
@@ -91,21 +89,21 @@ module.exports = {
 
     setUpShips: function(teamNum) {
         var gameBoard = this.chooseGameBoard(teamNum);
-        this.placeShip(gameBoard, 5, 0);
-        this.placeShip(gameBoard, 4, 1);
-        this.placeShip(gameBoard, 3, 2);
-        this.placeShip(gameBoard, 3, 3);
-        this.placeShip(gameBoard, 2, 4);
+        this.placeShips(gameBoard, 5, 0);
+        this.placeShips(gameBoard, 4, 1);
+        this.placeShips(gameBoard, 3, 2);
+        this.placeShips(gameBoard, 3, 3);
+        this.placeShips(gameBoard, 2, 4);
     },
 
-    placeShip: function(gameBoard, size, boatNum) {
+    placeShips: function(gameBoard, size, boatNum) {
         var orientation = Math.floor(2 * Math.random());
-        var maxRight = this.ROW;
-        var maxBottom = this.COLUMN;
+        var maxRight = this.ROWS;
+        var maxBottom = this.COLS;
         if (orientation == 0) { // up and down facing ship
-            maxBottom = this.COLUMN - size;
+            maxBottom = this.COLS - size;
         } else { // left and right facing ship
-            maxRight = this.ROW - size;
+            maxRight = this.ROWS - size;
         }
         var row = Math.floor(maxRight * Math.random());
         var column = Math.floor(maxBottom * Math.random());
@@ -113,7 +111,7 @@ module.exports = {
         var properlyPlaced = this.placeShip(gameBoard, row, column, size, boatNum, orientation);
         
         if(!properlyPlaced) {  // there was a collision
-            this.placeShip(gameBoard, size);
+            this.placeShip(gameBoard, row, column, size, boatNum, orientation);
         }
     },
 
@@ -143,7 +141,9 @@ module.exports = {
             } else {
                 xCoordinate = x + i;
             }
-            if (gameBoard[xCoordinate][yCoordinate].type !== this.sea) { // not an available spot
+            if (gameBoard[xCoordinate][yCoordinate].type !== this.SEA) { // not an available spot
+                console.log(gameBoard[xCoordinate][yCoordinate].type)
+                console.log(xCoordinate + " " + yCoordinate);
                 return false;
             } 
         }
