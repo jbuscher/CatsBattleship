@@ -17,8 +17,8 @@
 
         //Click handler for cells
         for(var i = 1; i <= ROWS*COLS; i++) {
-            $("#enemyBoard" + i).click(function() {
-                $("#" + this.id).html('X');
+            $("#" + i + "enemyBoard").click(function() {
+                connection.postVote(this.id);
             });
         }
 
@@ -27,7 +27,10 @@
 
         //get board state
         connection.getBoardState(function(boardState) {
-            console.log(boardState);
+            var board = JSON.parse(boardState);
+            for(var i = 0; i <= board.length; i++) {
+                $("#" + i + "enemyBoard").html(board[i-1]);
+            }
         })
     });
 
@@ -39,7 +42,7 @@
         for(var i = 0; i < rows; i++) {
             htmlString += "<tr>";
             for(var j = 0; j < cols; j++) {
-                htmlString += "<td id=\"" + divName + count + "\" class=\"" + divName + "Class\"></td>";
+                htmlString += "<td id=\"" + count + divName + "\" class=\"" + divName + "Class\"></td>";
                 count++;
             }
             htmlString += "</tr>";

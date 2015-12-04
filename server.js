@@ -43,16 +43,19 @@ app.get('/getTeam', function(request, response) {
     response.send(200, request.session.team);
 });
 
-/*
-TODO FOR MATTIE, fill in with gameboard stuff
-*/
 app.post('/boardState', function(request, response) {
-  console.log(request.session.team);
-  console.log(gameboard.getBoardState(request.session.team));
   response.send(gameboard.getBoardState(request.session.team));
+});
+
+app.post('/sendVote', function(request, response) {
+  var team = request.session.team;
+  var location = request.body.location;
+  voteCounter.vote(team, location);
 });
 
 var server = app.listen(port, function() {
   console.log('Battleship server listening at %s', port);
   gameboard.startNewGame();
+  voteCounter.clearVotes(1);
+  voteCounter.clearVotes(2);
 });
