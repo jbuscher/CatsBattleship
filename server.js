@@ -8,7 +8,7 @@ bodyParser = require('body-parser');
 
 //local imports
 var gameboard = require('./private_modules/battleship.js');
-var voteCounter = require('./private_modules/battleship.js');
+var voteCounter = require('./private_modules/voteCounter.js');
 
 //Globals
 var port = 8080;
