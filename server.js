@@ -52,7 +52,7 @@ app.post('/sendVote', function(request, response) {
   var location = request.body.location;
   voteCounter.vote(team, location);
   var x = Math.floor(location / 10);
-  var y = location % 10;
+  var y = location % 10 - 1;
   battleship.takeShot(team, x, y);
   response.send(200);
 });
