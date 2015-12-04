@@ -33,7 +33,7 @@ module.exports = {
     },
 
     pickTeamArray: function(teamNum) {
-        return (teamNum == 1) ? teamOneSpots : teamTwoSpots;
+        return (teamNum == 1) ? this.teamOneSpots : this.teamTwoSpots;
     },
 
     calculateIndexOfMax: function(teamNum) {

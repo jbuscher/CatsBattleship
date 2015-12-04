@@ -45,8 +45,8 @@ module.exports = {
     // TODO: what if space is not available?
     takeShot: function(teamNum, row, column) {
         var gameBoard = this.chooseGameBoard(teamNum);
-        gameBoard[row][column].available = 0;
-        var shotLocationType = gameBoard[row][column].type;
+        (gameBoard[row][column]).available = 0;
+        var shotLocationType = (gameBoard[row][column]).type;
         if (shotLocationType !== this.SEA) {
             var ships = teamNum === 1? this.teamOneShips: this.teamTwoShips;
             ships[shotLocationsType]--;

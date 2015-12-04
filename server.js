@@ -7,7 +7,7 @@ session = require('client-sessions'),
 bodyParser = require('body-parser');
 
 //local imports
-var gameboard = require('./private_modules/battleship.js');
+var battleship = require('./private_modules/battleship.js');
 var voteCounter = require('./private_modules/voteCounter.js');
 
 //Globals
@@ -44,18 +44,22 @@ app.get('/getTeam', function(request, response) {
 });
 
 app.post('/boardState', function(request, response) {
-  response.send(gameboard.getBoardState(request.session.team));
+  response.send(battleship.getBoardState(request.session.team));
 });
 
 app.post('/sendVote', function(request, response) {
   var team = request.session.team;
   var location = request.body.location;
   voteCounter.vote(team, location);
+  var x = Math.floor(location / 10);
+  var y = location % 10;
+  battleship.takeShot(team, x, y);
+  response.send(200);
 });
 
 var server = app.listen(port, function() {
   console.log('Battleship server listening at %s', port);
-  gameboard.startNewGame();
+  battleship.startNewGame();
   voteCounter.clearVotes(1);
   voteCounter.clearVotes(2);
 });
