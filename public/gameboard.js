@@ -1,4 +1,4 @@
-(function() {
+    (function() {
     "use strict";
     var ROWS = 10;
     var COLS = 10;
@@ -14,14 +14,13 @@
             $("#team_name").html("Team " + team);
         });
 
-
         //Click handler for cells
         for(var i = 1; i <= ROWS*COLS; i++) {
             $("#" + i + "enemyBoard").click(function() {
                 connection.postVote(this.id);
             });
         }
-
+ 
         //change which board is being looked at.
         $('input:radio[name=boardChoice]').change(changeRadioButton);
 
