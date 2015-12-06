@@ -51,10 +51,11 @@ app.post('/boardState', function(request, response) {
 app.post('/sendVote', function(request, response) {
   var team = request.session.team;
   var enemyTeam = team % 2 + 1;
-  var location = request.body.location;
+  var location = request.body.location - 1;
   voteCounter.vote(team, location);
   var x = Math.floor(location / 10);
-  var y = location % 10 - 1;
+  var y = location % 10;
+
   battleship.takeShot(enemyTeam, x, y);
   response.send(200);
 });
