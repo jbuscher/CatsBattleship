@@ -47,7 +47,7 @@ module.exports = {
         var shotLocationType = (gameBoard[row][column]).type;
         if (shotLocationType !== this.SEA) {
             var ships = teamNum === 1? this.teamOneShips: this.teamTwoShips;
-            ships[shotLocationsType]--;
+            ships[shotLocationType]--;
         }
     },
 
@@ -61,11 +61,17 @@ module.exports = {
     // If type is larger than the amount of boats (i.e. if there are 5 boats and you
     // get 6 for type), then it is sea.
     getBoardState: function(teamNum) {
-        var gameBoard = this.chooseGameBoard(teamNum);
         var result = [];
+        var gameBoard = this.chooseGameBoard(teamNum);
         for (var i = 0; i < this.ROWS; i++) {
             for (var j = 0; j < this.COLS; j++) {
                 result.push(gameBoard[i][j].available + gameBoard[i][j].type * 2);
+            }
+        }
+        var gameBoard2 = this.chooseGameBoard(teamNum % 2 + 1);
+        for (var i = 0; i < this.ROWS; i++) {
+            for (var j = 0; j < this.COLS; j++) {
+                result.push(gameBoard2[i][j].available + gameBoard2[i][j].type * 2);
             }
         }
         return JSON.stringify(result);
@@ -142,8 +148,6 @@ module.exports = {
                 xCoordinate = x + i;
             }
             if (gameBoard[xCoordinate][yCoordinate].type !== this.SEA) { // not an available spot
-                console.log(gameBoard[xCoordinate][yCoordinate].type)
-                console.log(xCoordinate + " " + yCoordinate);
                 return false;
             } 
         }

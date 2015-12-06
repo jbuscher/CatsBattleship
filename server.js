@@ -44,16 +44,18 @@ app.get('/getTeam', function(request, response) {
 });
 
 app.post('/boardState', function(request, response) {
-  response.send(battleship.getBoardState(request.session.team));
+  var team = request.session.team;
+  response.send(battleship.getBoardState(team));
 });
 
 app.post('/sendVote', function(request, response) {
   var team = request.session.team;
+  var enemyTeam = team % 2 + 1;
   var location = request.body.location;
   voteCounter.vote(team, location);
   var x = Math.floor(location / 10);
   var y = location % 10 - 1;
-  battleship.takeShot(team, x, y);
+  battleship.takeShot(enemyTeam, x, y);
   response.send(200);
 });
 

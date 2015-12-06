@@ -14,10 +14,43 @@
             $("#team_name").html("Team " + team);
         });
 
+        var updateBoardStateFunction = function(boardState) {
+            var boards = JSON.parse(boardState);
+            for(var i = 1; i <= ROWS*COLS; i++) {
+                var state = boards[i+99];
+                $("#" + i + "enemyBoard").html(state);
+                var td = $("#" + i + "enemyBoard")[0];
+                td.className = "sea";
+                if (state == 12) {
+                    td.className = "miss";
+                } else if (state % 2 == 0) {
+                    td.className = "hit";
+                }
+            }
+
+            for(var i = 1; i <= ROWS*COLS; i++) {
+                var state = boards[i-1];
+                $("#" + i + "teamBoard").html(state);
+                var td = $("#" + i + "teamBoard")[0];
+                if(state % 2 == 1 && state != 13) {
+                    //ship
+                    td.className = "ship";
+                } else {
+                    td.className = "sea";
+                }
+                if (state == 12) {
+                    td.className = "miss";
+                } else if (state % 2 == 0) {
+                    td.className = "hit";
+                }
+            }
+        };
+
         //Click handler for cells
         for(var i = 1; i <= ROWS*COLS; i++) {
             $("#" + i + "enemyBoard").click(function() {
                 connection.postVote(this.id);
+                connection.getBoardState(updateBoardStateFunction);
             });
         }
  
@@ -27,29 +60,17 @@
  
         // hit = 8, 6, 4, 2, 0
         // miss = 12
+        // 
 
         //get board state
-        connection.getBoardState(function(boardState) {
-            var board = JSON.parse(boardState);
-            for(var i = 1; i <= board.length; i++) {
-                $("#" + i + "enemyBoard").html(board[i-1]);
-                var td = $("#" + i + "enemyBoard")[0];
-                td.className = "sea";
-                if (board[i - 1] == 12) {
-                    td.className = "miss";
-                } else if (board[i - 1] % 2 == 0) {
-                    td.className = "hit";
-                }
-            }
-        })
-
+        connection.getBoardState(updateBoardStateFunction);
     });
 
     function buildGameBoard(rows, cols, divName) {
         var tableDiv = $("#" + divName);
         var count = 1;
         var htmlString = "";
-        htmlString += "<table>";
+        htmlString += "<table id=\"boardTable\">";
         for(var i = 0; i < rows; i++) {
             htmlString += "<tr>";
             for(var j = 0; j < cols; j++) {
