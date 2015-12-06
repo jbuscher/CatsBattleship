@@ -7,17 +7,23 @@
     <script type="text/javascript" src="connection.js"></script>
     <script type="text/javascript" src="gameboard.js"></script>
     <link href="style.css" type="text/css" rel="stylesheet" />
+    <link href='https://fonts.googleapis.com/css?family=Bilbo+Swash+Caps' rel='stylesheet' type='text/css'>
 </head>
 <body>
-    <h1 id="team_name"></h1>
-    <div id="teamBoard">
+    <div class="title">Cats Battleship</div>
+    <div class="col1">
+        <div id="teamBoard"></div>
+        <div id="enemyBoard"></div>
     </div>
-    <div id="enemyBoard">
+    <div class="col2">
+        <img class="cat" src="images/cat.jpg" alt="Cat Smash" /> <br/>
+        <div class="details">
+            <div> You are on <span id="team_name"></span></div>
+            <div id="radio-buttons">
+            	<input type="radio" name="boardChoice" value="teamBoardButton">Team Board<br>
+        		<input type="radio" name="boardChoice" value="enemyBoardButton" checked="true">Enemy Board
+        	</div>
+        </div>
     </div>
-    
-    <div id="radio-buttons">
-    	<input type="radio" name="boardChoice" value="teamBoardButton">Team Board<br>
-		<input type="radio" name="boardChoice" value="enemyBoardButton" checked="true">Enemy Board
-	</div>
 </body>
 </html>

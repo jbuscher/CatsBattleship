@@ -2,10 +2,6 @@ table {
 	border-spacing: 3px;
 }
 
-div {
-	float: left;
-}
-
 td {
     width: 40px;
     height: 40px;
@@ -33,4 +29,50 @@ td {
 
 .enemyBoardClass {
 	cursor: pointer
+}
+
+.col1, .col2 {
+	float: left;
+}
+
+.col1 {
+	margin-left: 11em;
+}
+
+.col2 {
+	margin-left: 3em;
+}
+
+.title {
+	display: block;
+	font-size: 96px;
+	font-family: 'Bilbo Swash Caps', cursive;
+	margin-bottom: 0.125em;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	text-decoration: underline;
+}
+
+.cat {
+	vertical-align: bottom;
+	width: 425px;
+}
+
+#team_name {
+	font-weight: bold;
+	font-size: 1.5em;
+}
+
+.details {
+	margin-top: 1.5em;
+	font-size: 1.25em;
+}
+
+#radio-buttons {
+	margin-top: 1em;
+}
+
+body {
+	background-color: #eaeaea;
 }
