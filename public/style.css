@@ -15,6 +15,11 @@ td {
 
 }
 
+td:hover {
+	border-color: red;
+	cursor: pointer;
+}
+
 .sea {
 	background-image: url("images/sea.jpg");
 }
@@ -25,10 +30,6 @@ td {
 
 .miss {
 	background-image: url("images/miss.jpg");
-}
-
-.enemyBoardClass {
-	cursor: pointer
 }
 
 .col1, .col2 {
