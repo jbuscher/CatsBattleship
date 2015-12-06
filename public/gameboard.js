@@ -24,13 +24,25 @@
         //change which board is being looked at.
         $('input:radio[name=boardChoice]').change(changeRadioButton);
 
+ 
+        // hit = 8, 6, 4, 2, 0
+        // miss = 12
+
         //get board state
         connection.getBoardState(function(boardState) {
             var board = JSON.parse(boardState);
-            for(var i = 0; i <= board.length; i++) {
+            for(var i = 1; i <= board.length; i++) {
                 $("#" + i + "enemyBoard").html(board[i-1]);
+                var td = $("#" + i + "enemyBoard")[0];
+                td.className = "sea";
+                if (board[i - 1] == 12) {
+                    td.className = "miss";
+                } else if (board[i - 1] % 2 == 0) {
+                    td.className = "hit";
+                }
             }
         })
+
     });
 
     function buildGameBoard(rows, cols, divName) {
