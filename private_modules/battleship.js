@@ -136,7 +136,6 @@ module.exports = {
         if (!this.checkAvailability(gameBoard, x, y, size, orientation)) {
             return false;
         }
-        console.log("X: " + x + ", Y: " + y + ", size: " + size + ", boatNum: " + boatNum + ", orientation: " + orientation);
         for(var i = 0; i < size; i++) {
             var yCoordinate = y;
             var xCoordinate = x;
