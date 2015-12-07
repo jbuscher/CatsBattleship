@@ -16,7 +16,7 @@ module.exports = {
         this.setBoard(1);
         this.setBoard(2);
         this.setUpShips(1);
-        //this.setUpShips(2);
+        this.setUpShips(2);
         this.teamOneShips = [5, 4, 3, 3, 2];
         this.teamTwoShips = [5, 4, 3, 3, 2];
     },

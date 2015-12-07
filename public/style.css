@@ -32,6 +32,10 @@ td:hover {
 	background-image: url("images/miss.jpg");
 }
 
+.ship {
+	background-color: #5F9F9F;
+}
+
 .col1, .col2 {
 	float: left;
 }

@@ -14,6 +14,7 @@ var voteCounter = require('./private_modules/voteCounter.js');
 var port = 8080;
 var app = express();
 var teamNum = 1;
+var whosTurn = 0;
 
 //App config
 app.use(session({
@@ -55,9 +56,14 @@ app.post('/sendVote', function(request, response) {
   voteCounter.vote(team, location);
   var x = Math.floor(location / 10);
   var y = location % 10;
-
-  battleship.takeShot(enemyTeam, x, y);
-  response.send(200);
+  if(team == whosTurn) {
+    battleship.takeShot(enemyTeam, x, y);
+    response.send(200, 1);
+    whosTurn = whosTurn % 2 + 1;
+  } else {
+    response.send(200, 0);
+  }
+  
 });
 
 var server = app.listen(port, function() {
@@ -65,4 +71,5 @@ var server = app.listen(port, function() {
   battleship.startNewGame();
   voteCounter.clearVotes(1);
   voteCounter.clearVotes(2);
+  whosTurn = Math.floor(Math.random() * 2) + 1;
 });

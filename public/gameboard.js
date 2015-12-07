@@ -18,7 +18,7 @@
             var boards = JSON.parse(boardState);
             for(var i = 1; i <= ROWS*COLS; i++) {
                 var state = boards[i+99];
-                $("#" + i + "enemyBoard").html(state);
+                //$("#" + i + "enemyBoard").html(state);
                 var td = $("#" + i + "enemyBoard")[0];
                 td.className = "sea";
                 if (state == 12) {
