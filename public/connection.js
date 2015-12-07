@@ -1,7 +1,7 @@
 Connection = function(){
     var xhr = new XMLHttpRequest();
 
-    var DEV_MODE = true;
+    var DEV_MODE = false;
     var url = DEV_MODE?"http://127.0.0.1:8080":"http://107.170.239.215:8080";
     var game_callback = function(){};
     var timeout = 2;
