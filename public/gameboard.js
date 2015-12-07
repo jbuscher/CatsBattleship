@@ -3,6 +3,9 @@
     var ROWS = 10;
     var COLS = 10;
     var connection = new Connection;
+    var timeLeft;
+    var whosTurn;
+    var turnLength;
 
     $(document).ready(function() {
         buildGameBoard(ROWS, COLS, "teamBoard");
@@ -14,57 +17,63 @@
             $("#team_name").html("Team " + team);
         });
 
-        var updateBoardStateFunction = function(boardState) {
-            var boards = JSON.parse(boardState);
-            for(var i = 1; i <= ROWS*COLS; i++) {
-                var state = boards[i+99];
-                //$("#" + i + "enemyBoard").html(state);
-                var td = $("#" + i + "enemyBoard")[0];
-                td.className = "sea";
-                if (state == 12) {
-                    td.className = "miss";
-                } else if (state % 2 == 0) {
-                    td.className = "hit";
-                }
-            }
+        connection.getGameInfo(function(data) {
+            var info = data.split(",");
+            whosTurn = info[0]
+            $("#turn_marker").html(whosTurn);
+            timeLeft = info[1];
+            turnLength = info[2];
+        });
 
-            for(var i = 1; i <= ROWS*COLS; i++) {
-                var state = boards[i-1];
-                $("#" + i + "teamBoard").html(state);
-                var td = $("#" + i + "teamBoard")[0];
-                if(state % 2 == 1 && state != 13) {
-                    //ship
-                    td.className = "ship";
-                } else {
-                    td.className = "sea";
-                }
-                if (state == 12) {
-                    td.className = "miss";
-                } else if (state % 2 == 0) {
-                    td.className = "hit";
-                }
-            }
-        };
 
         //Click handler for cells
         for(var i = 1; i <= ROWS*COLS; i++) {
             $("#" + i + "enemyBoard").click(function() {
                 connection.postVote(this.id);
-                connection.getBoardState(updateBoardStateFunction);
             });
         }
  
         //change which board is being looked at.
         $('input:radio[name=boardChoice]').change(changeRadioButton);
 
- 
-        // hit = 8, 6, 4, 2, 0
-        // miss = 12
-        // 
-
         //get board state
         connection.getBoardState(updateBoardStateFunction);
     });
+
+    // hit = 8, 6, 4, 2, 0
+        // miss = 12
+        // 
+    var updateBoardStateFunction = function(boardState) {
+        var boards = JSON.parse(boardState);
+        for(var i = 1; i <= ROWS*COLS; i++) {
+            var state = boards[i+99];
+            //$("#" + i + "enemyBoard").html(state);
+            var td = $("#" + i + "enemyBoard")[0];
+            td.className = "sea";
+            if (state == 12) {
+                td.className = "miss";
+            } else if (state % 2 == 0) {
+                td.className = "hit";
+            }
+        }
+
+        for(var i = 1; i <= ROWS*COLS; i++) {
+            var state = boards[i-1];
+            $("#" + i + "teamBoard").html(state);
+            var td = $("#" + i + "teamBoard")[0];
+            if(state % 2 == 1 && state != 13) {
+                //ship
+                td.className = "ship";
+            } else {
+                td.className = "sea";
+            }
+            if (state == 12) {
+                td.className = "miss";
+            } else if (state % 2 == 0) {
+                td.className = "hit";
+            }
+        }
+    };
 
     function buildGameBoard(rows, cols, divName) {
         var tableDiv = $("#" + divName);
@@ -93,5 +102,17 @@
             $("#enemyBoard").show();
         }
     }
+
+
+    setInterval(function(){ 
+        timeLeft--;
+        $("#timer").html(timeLeft); 
+        if(timeLeft == 0) {
+            timeLeft = turnLength;
+            whosTurn = whosTurn % 2 + 1;
+            $("#turn_marker").html(whosTurn);
+            connection.getBoardState(updateBoardStateFunction);
+        }
+    }, 1000);
 
 })();

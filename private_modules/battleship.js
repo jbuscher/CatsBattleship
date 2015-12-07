@@ -40,6 +40,17 @@ module.exports = {
         return gameBoard[row][column].available === 1;
     },
 
+    chooseValidLocation: function (teamNum) {
+        var gameBoard = this.chooseGameBoard(teamNum);
+        for(var i = 0; i < this.ROWS; i++) {
+            for(var j = 0; j < this.COLS; j++) {
+                if(gameBoard[i][j].available == 1) {
+                    return i * 10 + j;
+                }
+            }
+        } 
+    },
+
     // TODO: what if space is not available?
     takeShot: function(teamNum, row, column) {
         var gameBoard = this.chooseGameBoard(teamNum);

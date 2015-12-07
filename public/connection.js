@@ -18,12 +18,18 @@ Connection = function(){
         $.post(url + "/boardState", function(data, status) {
             console.log("board state request" + status);
             callback(data);
-        })
+        });
     }
 
     this.postVote = function(id) {
         $.post(url + "/sendVote", { location: parseInt(id)},function(data, status) {
             console.log("post vote" + status);
-        })
+        });
+    }
+
+    this.getGameInfo = function(callback) {
+        $.get(url + "/gameInfo", function(data, status) {
+            callback(data);
+        });
     }
 }
