@@ -17,7 +17,7 @@ td {
 
 td:hover {
 	border-color: red;
-	cursor: pointer;
+	cursor: crosshair;
 }
 
 .sea {
@@ -80,4 +80,57 @@ td:hover {
 
 body {
 	background-color: #eaeaea;
+}
+
+.pointer2 {
+	background-image: url("images/2pointer.png");
+}
+
+.pointer3a {
+	background-image: url("images/3apointer.png");
+}
+
+.pointer3b {
+	background-image: url("images/3bpointer.png");
+}
+
+.pointer4 {
+	background-image: url("images/4pointer.png");
+}
+
+.pointer5 {
+	background-image: url("images/5pointer.png");
+}
+
+label:hover {
+	cursor: pointer;
+}
+
+.color {
+	background-color: red;
+}
+
+p {
+	margin-bottom: 3px;
+	font-weight: bold;
+}
+
+.key {
+	margin-bottom: 1.5px;
+}
+
+.key1 {
+	background-color: #F5D400;
+}
+.key2 {
+	background-color: #41F500;
+}
+.key3 {
+	background-color: #9A2FCC;
+}
+.key4 {
+	background-color: #F51400;
+}
+.key5 {
+	background-color: #00E0F5;
 }
