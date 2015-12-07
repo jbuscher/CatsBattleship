@@ -16,6 +16,7 @@ var app = express();
 var teamNum = 1;
 var whosTurn = 0;
 var TURN_LENGTH = 10; //in seconds
+var gameover;
 
 //App config
 app.use(session({
@@ -54,12 +55,11 @@ app.post('/sendVote', function(request, response) {
   var team = request.session.team;
   var location = request.body.location - 1;
   voteCounter.vote(team, location);
-  console.log(voteCounter.getSpotWithMostVotes(team));
   response.send(200);  
 });
 
 app.get('/gameInfo', function(request, response) {
-  response.send(200, whosTurn+","+timeLeft+","+TURN_LENGTH);
+  response.send(200, whosTurn+","+timeLeft+","+TURN_LENGTH + "," + gameover);
 });
 
 var timeLeft; //set turn length
@@ -70,7 +70,7 @@ setInterval(function() {
     timeLeft = TURN_LENGTH;
     var location = voteCounter.getSpotWithMostVotes(whosTurn);
     voteCounter.clearVotes(whosTurn);
-    console.log("Vote for location "+ location);
+    console.log("Team " + whosTurn + " shot at location:"+ location);
 
     if(location == -1) {
       location = battleship.chooseValidLocation();
@@ -80,6 +80,7 @@ setInterval(function() {
     var y = location % 10;
     var enemyTeam = whosTurn % 2 + 1;
     battleship.takeShot(enemyTeam, x, y);
+    gameover = battleship.isGameOver();
     whosTurn = enemyTeam;
   }
 }, 1000);
@@ -87,9 +88,9 @@ setInterval(function() {
 var server = app.listen(port, function() {
   console.log('Battleship server listening at %s', port);
   battleship.startNewGame();
+  gameover = 0;
   voteCounter.clearVotes(1);
   voteCounter.clearVotes(2);
   whosTurn = Math.floor(Math.random() * 2) + 1;
-  console.log(whosTurn);
   timeLeft = TURN_LENGTH;
 });

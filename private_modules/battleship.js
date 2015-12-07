@@ -32,8 +32,14 @@ module.exports = {
         }
     },
 
+//Returns the winner of the game
     isGameOver: function() {
-        return this.getNumberOfRemainingShips(1) === 0 || this.getNumberOfRemainingShips(2) === 0;
+        if(this.getNumberOfRemainingShips(1) === 0) {
+            return 2;
+        } else if (this.getNumberOfRemainingShips(2) === 0) {
+            return 1;
+        }
+        return 0;
     },
 
     isSpotAvailable: function(teamNum, row, column) {
