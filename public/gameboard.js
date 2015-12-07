@@ -25,13 +25,14 @@
             turnLength = info[2];
         });
 
-
-        var elem;
         //Click handler for cells
         for(var i = 1; i <= ROWS*COLS; i++) {
             $("#" + i + "enemyBoard").click(function() {
                 connection.postVote(this.id);
-                $("#vote").html(parseInt(this.id));
+                // $("#vote").html(parseInt(this.id));
+                // var elem = $("#" + i + "enemyBoard");
+                // elem.style.border="3px solid green";
+                // setTimeout(revertBorderColor(elem), timeLeft*1000);
             });
         }
  
@@ -138,6 +139,10 @@
         htmlString += "</table>";
         tableDiv.append(htmlString);
     }
+
+    // function revertBorderColor(elem) {
+    //     elem.style.border="3px solid black";
+    // }
 
     function changeRadioButton() {
         if ($("input[name='boardChoice']:checked").val() == 'teamBoardButton') {
