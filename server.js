@@ -67,10 +67,6 @@ app.post('/sendVote', function(request, response) {
   response.send(200);  
 });
 
-app.get('/gameInfo', function(request, response) {
-  response.send(200, whosTurn+","+timeLeft+","+TURN_LENGTH + "," + gameover);
-});
-
 var timeLeft; //set turn length
 setInterval(function() {  
   timeLeft--;
@@ -91,6 +87,8 @@ setInterval(function() {
     battleship.takeShot(enemyTeam, x, y);
     gameover = battleship.isGameOver();
     whosTurn = enemyTeam;
+
+    io.sockets.emit('gameState', {turn:whosTurn, gameover:gameover, location:location});
   }
 }, 1000);
 

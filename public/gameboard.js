@@ -4,7 +4,7 @@
     var COLS = 10;
     var connection = new Connection;
     var timeLeft;
-    var whosTurn;
+    var thisTeam;
     var turnLength;
 
     $(document).ready(function() {
@@ -15,14 +15,7 @@
 
         connection.getTeam(function(team) {
             $("#team_name").html("Team " + team);
-        });
-
-        connection.getGameInfo(function(data) {
-            var info = data.split(",");
-            whosTurn = info[0]
-            $("#turn_marker").html(whosTurn);
-            timeLeft = info[1];
-            turnLength = info[2];
+            thisTeam = team;
         });
 
         //Click handler for cells
@@ -168,9 +161,26 @@
     }, 1000);*/
 
     var socket = io();
+    //Handle Timer
     socket.on('timer', function (data) {  
-        console.log("recieved socket input: " + data);
         $('#timer').html(data);
+    });
+
+    //Handle game state
+    socket.on('gameState', function(data) {
+        console.log(data);
+        $("#turn_marker").html(data.turn);
+        var x = data.location % 10
+        var y = Math.floor(data.location / 10);
+
+        if(thisTeam == data.turn) { //enemy shot
+            $("#e_x").html(x);
+            $("#e_y").html(y);
+        } else {
+            $("#x").html(x);
+            $("#y").html(y);
+        }
+        
     });
 
 })();
