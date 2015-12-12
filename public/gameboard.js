@@ -178,12 +178,12 @@
 
         var hit_text = data.hit_miss == 12 ? "miss" : "hit";
         if(thisTeam == data.turn) { //enemy shot
-            $("#e_x").html(x);
-            $("#e_y").html(y);
+            $("#e_letter").html(String.fromCharCode(65 + y));
+            $("#e_num").html(x + 1);
             $("#e_hit_miss").html(hit_text);
         } else {
-            $("#x").html(x);
-            $("#y").html(y);
+            $("#letter").html(String.fromCharCode(65 + y));
+            $("#num").html(x + 1);
             $("#hit_miss").html(hit_text);
         }
         
