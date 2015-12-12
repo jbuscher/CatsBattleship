@@ -94,6 +94,11 @@ module.exports = {
         return JSON.stringify(result);
     },
 
+    getLocationState: function(teamNum, x, y) {
+        var gameBoard = this.chooseGameBoard(teamNum);
+        return gameBoard[x][y].available + gameBoard[x][y].type * 2; 
+    },
+
     getNumberOfRemainingShips: function(teamNum) {
         var total = 0;
         var ships = teamNum === 1? this.teamOneShips: this.teamTwoShips;

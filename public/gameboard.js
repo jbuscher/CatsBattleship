@@ -168,12 +168,16 @@
         var x = data.location % 10
         var y = Math.floor(data.location / 10);
 
+
+        var hit_text = data.hit_miss == 12 ? "miss" : "hit";
         if(thisTeam == data.turn) { //enemy shot
             $("#e_x").html(x);
             $("#e_y").html(y);
+            $("#e_hit_miss").html(hit_text);
         } else {
             $("#x").html(x);
             $("#y").html(y);
+            $("#hit_miss").html(hit_text);
         }
         
         if(data.gameover > 0) {

@@ -85,10 +85,11 @@ setInterval(function() {
     var y = location % 10;
     var enemyTeam = whosTurn % 2 + 1;
     battleship.takeShot(enemyTeam, x, y);
+    var hit_miss = battleship.getLocationState(enemyTeam, x, y);
+
     gameover = battleship.isGameOver();
     whosTurn = enemyTeam;
-
-    io.sockets.emit('gameState', {turn:whosTurn, gameover:gameover, location:location});
+    io.sockets.emit('gameState', {turn:whosTurn, gameover:gameover, location:location, hit_miss: hit_miss});
     if(gameover > 0) {
       resetGame();
     }
