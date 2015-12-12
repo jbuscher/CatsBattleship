@@ -12,10 +12,9 @@ td {
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover;
-
 }
 
-td:hover {
+.sea:hover {
 	border-color: red;
 	cursor: crosshair;
 }
