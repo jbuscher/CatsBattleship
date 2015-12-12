@@ -14,7 +14,6 @@
         $("#teamBoard").hide();
 
         connection.getTeam(function(team) {
-            $("#team_name").html("Team " + team);
             thisTeam = team;
         });
 
@@ -162,6 +161,12 @@
 
 
     var socket = io();
+
+    socket.on('message', function(message) {
+        var turn_text = message == thisTeam ? "Your" : "Enemy";
+        $("#turn_marker").html(turn_text);
+    })
+
     //Handle Timer
     socket.on('timer', function (data) {  
         $('#timer').html(data);
@@ -170,21 +175,31 @@
     //Handle game state
     socket.on('gameState', function(data) {
         connection.getBoardState(updateBoardStateFunction);
-        console.log(data);
-        $("#turn_marker").html(data.turn);
-        var x = data.location % 10
-        var y = Math.floor(data.location / 10);
+        var turn_text = data.turn == thisTeam ? "Your" : "Enemy";
+        $("#turn_marker").html(turn_text);
+
+        if(data.location >= 0 && data.hit_miss > 0) {
+            var x = data.location % 10
+            var y = Math.floor(data.location / 10);
 
 
-        var hit_text = data.hit_miss == 12 ? "miss" : "hit";
-        if(thisTeam == data.turn) { //enemy shot
-            $("#e_letter").html(String.fromCharCode(65 + y));
-            $("#e_num").html(x + 1);
-            $("#e_hit_miss").html(hit_text);
-        } else {
-            $("#letter").html(String.fromCharCode(65 + y));
-            $("#num").html(x + 1);
-            $("#hit_miss").html(hit_text);
+            var hit_text = data.hit_miss == 12 ? "MISS" : "HIT";
+
+            if(thisTeam == data.turn) { //enemy shot
+                $("#e_coords").html(String.fromCharCode(65 + y) + (x + 1));
+                $("#e_hit_miss").html(hit_text);
+                if(hit_text == "MISS")
+                    $("#e_hit_miss").css("color", "red");
+                else
+                    $("#e_hit_miss").css("color", "green");
+            } else {
+                $("#coords").html(String.fromCharCode(65 + y) + (x + 1));
+                $("#hit_miss").html(hit_text);
+                if(hit_text == "MISS")
+                    $("#hit_miss").css("color", "red");
+                else
+                    $("#hit_miss").css("color", "green");
+            }
         }
         
         if(data.gameover > 0) {

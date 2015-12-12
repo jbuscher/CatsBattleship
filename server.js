@@ -34,6 +34,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // socket connections
 io.on('connection', function(socket){
   console.log('a user connected');
+  socket.send(whosTurn);
   socket.on('disconnect', function(){
     console.log('user disconnected');
   });
