@@ -149,16 +149,10 @@
     }
 
 
-   /* setInterval(function(){ 
-        timeLeft--;
-        $("#timer").html(timeLeft);
-        if(timeLeft == 0) {
-            timeLeft = turnLength;
-            whosTurn = whosTurn % 2 + 1;
-            $("#turn_marker").html(whosTurn);
-            connection.getBoardState(updateBoardStateFunction);
-        }
-    }, 1000);*/
+   function gameover(winner) {
+
+   }
+
 
     var socket = io();
     //Handle Timer
@@ -181,6 +175,9 @@
             $("#y").html(y);
         }
         
+        if(data.gameover > 0) {
+            gameover(data.gameover);
+        }
     });
 
 })();
