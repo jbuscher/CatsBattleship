@@ -162,6 +162,7 @@
 
     //Handle game state
     socket.on('gameState', function(data) {
+        connection.getBoardState(updateBoardStateFunction);
         console.log(data);
         $("#turn_marker").html(data.turn);
         var x = data.location % 10

@@ -89,8 +89,19 @@ setInterval(function() {
     whosTurn = enemyTeam;
 
     io.sockets.emit('gameState', {turn:whosTurn, gameover:gameover, location:location});
+    if(gameover > 0) {
+      resetGame();
+    }
   }
 }, 1000);
+
+function resetGame() {
+  battleship.startNewGame();
+  gameover = 0;
+  voteCounter.clearVotes(1);
+  voteCounter.clearVotes(2);
+  whosTurn = Math.floor(Math.random() * 2) + 1;
+}
 
 var server = http.listen(port, function() {
   console.log('Battleship server listening at %s', port);
