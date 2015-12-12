@@ -80,6 +80,7 @@ td:hover {
 
 body {
 	background-color: #eaeaea;
+	font-family: 'Raleway', sans-serif;
 }
 
 .pointer2 {
@@ -133,4 +134,22 @@ p {
 }
 .key5 {
 	background-color: #00E0F5;
+}
+
+.git {
+	right: 1em;
+	top: 1em;
+	position: fixed;
+}
+
+.git a {
+	text-decoration: none;
+}
+
+.git a:visited {
+	color: black;
+}
+
+.git img {
+	vertical-align: middle;
 }
