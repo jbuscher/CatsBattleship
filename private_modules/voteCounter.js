@@ -14,12 +14,14 @@ module.exports = {
         var spots = this.pickTeamArray(teamNum);
         this.maxArray[this.calculateIndexOfMax(teamNum)] = 0;
         this.maxArray[this.calculateIndexOfMaxIndex(teamNum)] = -1;
-        spots = [];
+        for (var i = 0; i < 100; i ++) {
+            spots[i] = 0;
+        }
     },
 
     vote: function(teamNum, location) {
         var spots = this.pickTeamArray(teamNum);
-        spots[location] = spots[location]++;
+        spots[location]++;
         if (spots[location] > this.maxArray[this.calculateIndexOfMax(teamNum)]) {
             this.maxArray[this.calculateIndexOfMax(teamNum)] = spots[location];
             this.maxArray[this.calculateIndexOfMaxIndex(teamNum)] = location;
@@ -33,7 +35,12 @@ module.exports = {
     },
 
     pickTeamArray: function(teamNum) {
-        return (teamNum == 1) ? this.teamOneSpots : this.teamTwoSpots;
+        if (teamNum === 1) {
+            return this.teamOneSpots;
+        } else {
+            return this.teamTwoSpots;
+        }
+        //return (teamNum === 1) ? this.teamOneSpots : this.teamTwoSpots;
     },
 
     calculateIndexOfMax: function(teamNum) {

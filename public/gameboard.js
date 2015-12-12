@@ -3,6 +3,9 @@
     var ROWS = 10;
     var COLS = 10;
     var connection = new Connection;
+    var timeLeft;
+    var thisTeam;
+    var turnLength;
 
     $(document).ready(function() {
         buildGameBoard(ROWS, COLS, "teamBoard");
@@ -11,68 +14,121 @@
         $("#teamBoard").hide();
 
         connection.getTeam(function(team) {
-            $("#team_name").html("Team " + team);
+            thisTeam = team;
         });
-
-        var updateBoardStateFunction = function(boardState) {
-            var boards = JSON.parse(boardState);
-            for(var i = 1; i <= ROWS*COLS; i++) {
-                var state = boards[i+99];
-                //$("#" + i + "enemyBoard").html(state);
-                var td = $("#" + i + "enemyBoard")[0];
-                td.className = "sea";
-                if (state == 12) {
-                    td.className = "miss";
-                } else if (state % 2 == 0) {
-                    td.className = "hit";
-                }
-            }
-
-            for(var i = 1; i <= ROWS*COLS; i++) {
-                var state = boards[i-1];
-                $("#" + i + "teamBoard").html(state);
-                var td = $("#" + i + "teamBoard")[0];
-                if(state % 2 == 1 && state != 13) {
-                    //ship
-                    td.className = "ship";
-                } else {
-                    td.className = "sea";
-                }
-                if (state == 12) {
-                    td.className = "miss";
-                } else if (state % 2 == 0) {
-                    td.className = "hit";
-                }
-            }
-        };
 
         //Click handler for cells
         for(var i = 1; i <= ROWS*COLS; i++) {
             $("#" + i + "enemyBoard").click(function() {
                 connection.postVote(this.id);
-                connection.getBoardState(updateBoardStateFunction);
+                // $("#vote").html(parseInt(this.id));
+                // var elem = $("#" + i + "enemyBoard");
+                // elem.style.border="3px solid green";
+                // setTimeout(revertBorderColor(elem), timeLeft*1000);
             });
         }
  
         //change which board is being looked at.
         $('input:radio[name=boardChoice]').change(changeRadioButton);
 
- 
-        // hit = 8, 6, 4, 2, 0
-        // miss = 12
-        // 
-
         //get board state
         connection.getBoardState(updateBoardStateFunction);
     });
+
+    // hit = 8, 6, 4, 2, 0
+    // miss = 12
+    var updateBoardStateFunction = function(boardState) {
+        var boards = JSON.parse(boardState);
+        var boards2 = boards.slice();
+        boards2 = boards2.splice(100, 100);
+
+        var sunk2 = containsElementNtimes(boards2, 8, 2);
+        var sunk3a = containsElementNtimes(boards2, 6, 3);
+        var sunk3b = containsElementNtimes(boards2, 4, 3);
+        var sunk4 = containsElementNtimes(boards2, 2, 4);
+        var sunk5 = containsElementNtimes(boards2, 0, 5);
+
+        for(var i = 1; i <= ROWS*COLS; i++) {
+            var state = boards[i+99];
+            //$("#" + i + "enemyBoard").html(state);
+            var td = $("#" + i + "enemyBoard")[0];
+            td.className = "sea";
+            if (state == 12) {
+                td.className = "miss";
+            } else if (state % 2 == 0) {
+                td.className = "hit";
+                if (sunk2 && state == 8) {
+                    td.className = "pointer2";
+                }
+
+                if (sunk3a && state == 6) {
+                    td.className = "pointer3a";
+                }
+
+                if (sunk3b && state == 4) {
+                    td.className = "pointer3b";
+                }
+
+                if (sunk4 && state == 2) {
+                    td.className = "pointer4";
+                }
+
+                if (sunk5 && state == 0) {
+                    td.className = "pointer5";
+                }
+            }
+        }
+
+        for (var i = 1; i <= ROWS*COLS; i++) {
+            var state = boards[i-1];
+            $("#" + i + "teamBoard").html(state);
+            var td = $("#" + i + "teamBoard")[0];
+            if (state == 9) {
+                td.className = "pointer2";
+            } else if (state == 7){
+                td.className = "pointer3a";
+            } else if (state == 5){
+                td.className = "pointer3b";
+            } else if (state == 3){
+                td.className = "pointer4";
+            } else if (state == 1){
+                td.className = "pointer5";
+            } else {
+                td.className = "sea";
+            }
+            if (state == 12) {
+                td.className = "miss";
+            } else if (state % 2 == 0) {
+                td.className = "hit";
+            }
+        }
+    };
+
+    function containsElementNtimes(boards, x, n) {
+        var count = 0;
+        for (var i = 0; i < ROWS*COLS; i++) {
+            if (boards[i] == x) {
+                count++;
+            }
+        }
+
+        return (count == n);
+    }
 
     function buildGameBoard(rows, cols, divName) {
         var tableDiv = $("#" + divName);
         var count = 1;
         var htmlString = "";
         htmlString += "<table id=\"boardTable\">";
+        htmlString += "<tr>";
+        for (var nums = 0; nums < cols + 1; nums++) {
+            var displayString = (nums == 0) ? '': nums;
+            htmlString += "<td class='dummy'>" + displayString + "</td>";
+        }
+        htmlString += "</tr>";
         for(var i = 0; i < rows; i++) {
             htmlString += "<tr>";
+            htmlString += "<td class='dummy'>" + String.fromCharCode(65 + i);  + "</td>"
             for(var j = 0; j < cols; j++) {
                 htmlString += "<td id=\"" + count + divName + "\" class=\"" + divName + "Class\"></td>";
                 count++;
@@ -82,6 +138,10 @@
         htmlString += "</table>";
         tableDiv.append(htmlString);
     }
+
+    // function revertBorderColor(elem) {
+    //     elem.style.border="3px solid black";
+    // }
 
     function changeRadioButton() {
         if ($("input[name='boardChoice']:checked").val() == 'teamBoardButton') {
@@ -93,5 +153,58 @@
             $("#enemyBoard").show();
         }
     }
+
+
+   function gameover(winner) {
+
+   }
+
+
+    var socket = io();
+
+    socket.on('message', function(message) {
+        var turn_text = message == thisTeam ? "Your" : "Enemy";
+        $("#turn_marker").html(turn_text);
+    })
+
+    //Handle Timer
+    socket.on('timer', function (data) {  
+        $('#timer').html(data);
+    });
+
+    //Handle game state
+    socket.on('gameState', function(data) {
+        connection.getBoardState(updateBoardStateFunction);
+        var turn_text = data.turn == thisTeam ? "Your" : "Enemy";
+        $("#turn_marker").html(turn_text);
+
+        if(data.location >= 0 && data.hit_miss > 0) {
+            var x = data.location % 10
+            var y = Math.floor(data.location / 10);
+
+
+            var hit_text = data.hit_miss == 12 ? "MISS" : "HIT";
+
+            if(thisTeam == data.turn) { //enemy shot
+                $("#e_coords").html(String.fromCharCode(65 + y) + (x + 1));
+                $("#e_hit_miss").html(hit_text);
+                if(hit_text == "MISS")
+                    $("#e_hit_miss").css("color", "red");
+                else
+                    $("#e_hit_miss").css("color", "green");
+            } else {
+                $("#coords").html(String.fromCharCode(65 + y) + (x + 1));
+                $("#hit_miss").html(hit_text);
+                if(hit_text == "MISS")
+                    $("#hit_miss").css("color", "red");
+                else
+                    $("#hit_miss").css("color", "green");
+            }
+        }
+        
+        if(data.gameover > 0) {
+            gameover(data.gameover);
+        }
+    });
 
 })();

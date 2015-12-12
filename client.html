@@ -4,12 +4,20 @@
     <title>Battleship</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="connection.js"></script>
     <script type="text/javascript" src="gameboard.js"></script>
     <link href="style.css" type="text/css" rel="stylesheet" />
     <link href='https://fonts.googleapis.com/css?family=Bilbo+Swash+Caps' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 </head>
 <body>
+    <div class="git">
+            <a href="https://github.com/jbuscher/CatsBattleship">
+                <img src="images/github.png" /> <span>View</span>
+            </a>
+    </div>
+
     <div class="title">Cats Battleship</div>
     <div class="col1">
         <div id="teamBoard"></div>
@@ -18,11 +26,34 @@
     <div class="col2">
         <img class="cat" src="images/cat.jpg" alt="Cat Smash" /> <br/>
         <div class="details">
-            <div> You are on <span id="team_name"></span></div>
+            <div> It is <span id="turn_marker"></span> Team's Turn</div>
+            <div>There are <span id="timer"></span> seconds until next turn</div>
+            <div>Your team last shot at <span class="shot" id="coords"></span>. <span id="hit_miss"></span></div>
+            <div>Enemy team last shot at <span class="shot" id="e_coords"></span>. <span id="e_hit_miss"></span></div>
             <div id="radio-buttons">
-            	<input type="radio" name="boardChoice" value="teamBoardButton">Team Board<br>
-        		<input type="radio" name="boardChoice" value="enemyBoardButton" checked="true">Enemy Board
+            	<label><input type="radio" name="boardChoice" value="teamBoardButton"> Team Board</label><br>
+        		<label><input type="radio" name="boardChoice" value="enemyBoardButton" checked="true"> Enemy Board</label>
         	</div>
+        </div>
+
+        <div class="legend">
+            <p>Legend</p>
+            <div class="key">
+                <span class="key1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span> 5 pointer </span>
+            </div>
+            <div class="key">
+                <span class="key2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span> 4 pointer </span>
+            </div>
+            <div class="key">
+                <span class="key3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span> 3 pointer </span>
+            </div>
+            <div class="key">
+                <span class="key4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span> 3 pointer </span>
+            </div>
+            <div class="key">
+                <span class="key5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span> 2 pointer </span>
+            </div>
+
         </div>
     </div>
 </body>

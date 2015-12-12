@@ -1,10 +1,13 @@
 //Imports
 var express = require('express'),
+app = express(),
 fs = require('fs'),
 url = require('url'),
 path = require('path'),
 session = require('client-sessions'),
-bodyParser = require('body-parser');
+bodyParser = require('body-parser'),
+http = require('http').Server(app);
+io = require('socket.io')(http);
 
 //local imports
 var battleship = require('./private_modules/battleship.js');
@@ -12,9 +15,10 @@ var voteCounter = require('./private_modules/voteCounter.js');
 
 //Globals
 var port = 8080;
-var app = express();
 var teamNum = 1;
 var whosTurn = 0;
+var TURN_LENGTH = 11; //in seconds
+var gameover;
 
 //App config
 app.use(session({
@@ -27,6 +31,14 @@ app.use(express.static(path.join(__dirname, 'public'))); // uses static files in
 app.use( bodyParser.json() );
 app.use(bodyParser.urlencoded({ extended: true })); 
 
+// socket connections
+io.on('connection', function(socket){
+  console.log('a user connected');
+  socket.send(whosTurn);
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
+});
 
 /*
 Alternates the assignment of a team to the user, remembers user via cookies
@@ -51,25 +63,54 @@ app.post('/boardState', function(request, response) {
 
 app.post('/sendVote', function(request, response) {
   var team = request.session.team;
-  var enemyTeam = team % 2 + 1;
   var location = request.body.location - 1;
   voteCounter.vote(team, location);
-  var x = Math.floor(location / 10);
-  var y = location % 10;
-  if(team == whosTurn) {
-    battleship.takeShot(enemyTeam, x, y);
-    response.send(200, 1);
-    whosTurn = whosTurn % 2 + 1;
-  } else {
-    response.send(200, 0);
-  }
-  
+  response.send(200);  
 });
 
-var server = app.listen(port, function() {
-  console.log('Battleship server listening at %s', port);
+var timeLeft; //set turn length
+setInterval(function() {  
+  timeLeft--;
+  io.sockets.emit('timer', timeLeft);
+  if(timeLeft == 0) {
+    timeLeft = TURN_LENGTH;
+    var location = voteCounter.getSpotWithMostVotes(whosTurn);
+    voteCounter.clearVotes(whosTurn);
+    console.log("Team " + whosTurn + " shot at location:"+ location);
+
+    if(location == -1) {
+      location = battleship.chooseValidLocation();
+    }
+
+    var x = Math.floor(location / 10);
+    var y = location % 10;
+    var enemyTeam = whosTurn % 2 + 1;
+    battleship.takeShot(enemyTeam, x, y);
+    var hit_miss = battleship.getLocationState(enemyTeam, x, y);
+
+    gameover = battleship.isGameOver();
+    whosTurn = enemyTeam;
+    io.sockets.emit('gameState', {turn:whosTurn, gameover:gameover, location:location, hit_miss: hit_miss});
+    if(gameover > 0) {
+      resetGame();
+    }
+  }
+}, 1000);
+
+function resetGame() {
   battleship.startNewGame();
+  gameover = 0;
   voteCounter.clearVotes(1);
   voteCounter.clearVotes(2);
   whosTurn = Math.floor(Math.random() * 2) + 1;
+}
+
+var server = http.listen(port, function() {
+  console.log('Battleship server listening at %s', port);
+  battleship.startNewGame();
+  gameover = 0;
+  voteCounter.clearVotes(1);
+  voteCounter.clearVotes(2);
+  whosTurn = Math.floor(Math.random() * 2) + 1;
+  timeLeft = TURN_LENGTH;
 });

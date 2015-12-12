@@ -32,12 +32,29 @@ module.exports = {
         }
     },
 
+//Returns the winner of the game
     isGameOver: function() {
-        return this.getNumberOfRemainingShips(1) === 0 || this.getNumberOfRemainingShips(2) === 0;
+        if(this.getNumberOfRemainingShips(1) === 0) {
+            return 2;
+        } else if (this.getNumberOfRemainingShips(2) === 0) {
+            return 1;
+        }
+        return 0;
     },
 
     isSpotAvailable: function(teamNum, row, column) {
         return gameBoard[row][column].available === 1;
+    },
+
+    chooseValidLocation: function (teamNum) {
+        var gameBoard = this.chooseGameBoard(teamNum);
+        for(var i = 0; i < this.ROWS; i++) {
+            for(var j = 0; j < this.COLS; j++) {
+                if(gameBoard[i][j].available == 1) {
+                    return i * 10 + j;
+                }
+            }
+        } 
     },
 
     // TODO: what if space is not available?
@@ -75,6 +92,11 @@ module.exports = {
             }
         }
         return JSON.stringify(result);
+    },
+
+    getLocationState: function(teamNum, x, y) {
+        var gameBoard = this.chooseGameBoard(teamNum);
+        return gameBoard[x][y].available + gameBoard[x][y].type * 2; 
     },
 
     getNumberOfRemainingShips: function(teamNum) {
@@ -117,7 +139,7 @@ module.exports = {
         var properlyPlaced = this.placeShip(gameBoard, row, column, size, boatNum, orientation);
         
         if(!properlyPlaced) {  // there was a collision
-            this.placeShip(gameBoard, row, column, size, boatNum, orientation);
+            this.placeShips(gameBoard, size, boatNum);
         }
     },
 
