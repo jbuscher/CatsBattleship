@@ -6,6 +6,7 @@
     var timeLeft;
     var thisTeam;
     var turnLength;
+    var socket = io();
 
     $(document).ready(function() {
         buildGameBoard(ROWS, COLS, "teamBoard");
@@ -20,7 +21,8 @@
         //Click handler for cells
         for(var i = 1; i <= ROWS*COLS; i++) {
             $("#" + i + "enemyBoard").click(function() {
-                connection.postVote(this.id);
+                socket.emit('vote', {team:thisTeam, location:parseInt(this.id)});
+                //connection.postVote(this.id);
                 // $("#vote").html(parseInt(this.id));
                 // var elem = $("#" + i + "enemyBoard");
                 // elem.style.border="3px solid green";
@@ -155,21 +157,24 @@
     }
 
 
-   function gameover(winner) {
+    function gameover(winner) {
+        alert("Game Over!!!! Team " + winner);
+    }
 
-   }
-
-
-    var socket = io();
 
     socket.on('message', function(message) {
-        var turn_text = message == thisTeam ? "Your" : "Enemy";
+        console.log(message);
+        var turn_text = message.turn == thisTeam ? "Your" : "Enemy";
         $("#turn_marker").html(turn_text);
     })
 
     //Handle Timer
     socket.on('timer', function (data) {  
         $('#timer').html(data);
+    });
+
+    socket.on('indyVote', function(data) {
+        console.log(data);
     });
 
     //Handle game state
@@ -204,6 +209,7 @@
         
         if(data.gameover > 0) {
             gameover(data.gameover);
+
         }
     });
 
