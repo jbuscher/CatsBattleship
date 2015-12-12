@@ -121,8 +121,15 @@
         var count = 1;
         var htmlString = "";
         htmlString += "<table id=\"boardTable\">";
+        htmlString += "<tr>";
+        for (var nums = 0; nums < cols + 1; nums++) {
+            var displayString = (nums == 0) ? '': nums;
+            htmlString += "<td class='dummy'>" + displayString + "</td>";
+        }
+        htmlString += "</tr>";
         for(var i = 0; i < rows; i++) {
             htmlString += "<tr>";
+            htmlString += "<td class='dummy'>" + String.fromCharCode(65 + i);  + "</td>"
             for(var j = 0; j < cols; j++) {
                 htmlString += "<td id=\"" + count + divName + "\" class=\"" + divName + "Class\"></td>";
                 count++;

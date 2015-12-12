@@ -153,3 +153,8 @@ p {
 .git img {
 	vertical-align: middle;
 }
+
+.dummy {
+	border: none;
+	font-weight: bold;
+}
