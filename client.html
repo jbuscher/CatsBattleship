@@ -4,6 +4,7 @@
     <title>Battleship</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="connection.js"></script>
     <script type="text/javascript" src="gameboard.js"></script>
     <link href="style.css" type="text/css" rel="stylesheet" />
@@ -20,7 +21,7 @@
         <div class="details">
             <div> You are on <span id="team_name"></span></div>
             <div> It is Team <span id="turn_marker"></span>'s Turn</div>
-            <div>There are about <span id="timer"></span> seconds until next turn</div>
+            <div>There are  <span id="timer"></span> seconds until next turn</div>
             <div>You voted on box number: <span id="vote"></span></div>
             <div id="radio-buttons">
             	<label><input type="radio" name="boardChoice" value="teamBoardButton"> Team Board</label><br>

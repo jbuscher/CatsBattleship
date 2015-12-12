@@ -156,7 +156,7 @@
     }
 
 
-    setInterval(function(){ 
+   /* setInterval(function(){ 
         timeLeft--;
         $("#timer").html(timeLeft);
         if(timeLeft == 0) {
@@ -165,6 +165,12 @@
             $("#turn_marker").html(whosTurn);
             connection.getBoardState(updateBoardStateFunction);
         }
-    }, 1000);
+    }, 1000);*/
+
+    var socket = io();
+    socket.on('timer', function (data) {  
+        console.log("recieved socket input: " + data);
+        $('#timer').html(data);
+    });
 
 })();

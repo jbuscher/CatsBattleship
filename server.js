@@ -1,10 +1,13 @@
 //Imports
 var express = require('express'),
+app = express(),
 fs = require('fs'),
 url = require('url'),
 path = require('path'),
 session = require('client-sessions'),
-bodyParser = require('body-parser');
+bodyParser = require('body-parser'),
+http = require('http').Server(app);
+io = require('socket.io')(http);
 
 //local imports
 var battleship = require('./private_modules/battleship.js');
@@ -12,10 +15,9 @@ var voteCounter = require('./private_modules/voteCounter.js');
 
 //Globals
 var port = 8080;
-var app = express();
 var teamNum = 1;
 var whosTurn = 0;
-var TURN_LENGTH = 10; //in seconds
+var TURN_LENGTH = 11; //in seconds
 var gameover;
 
 //App config
@@ -29,6 +31,13 @@ app.use(express.static(path.join(__dirname, 'public'))); // uses static files in
 app.use( bodyParser.json() );
 app.use(bodyParser.urlencoded({ extended: true })); 
 
+// socket connections
+io.on('connection', function(socket){
+  console.log('a user connected');
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
+});
 
 /*
 Alternates the assignment of a team to the user, remembers user via cookies
@@ -65,7 +74,7 @@ app.get('/gameInfo', function(request, response) {
 var timeLeft; //set turn length
 setInterval(function() {  
   timeLeft--;
-  //console.log(timeLeft);
+  io.sockets.emit('timer', timeLeft);
   if(timeLeft == 0) {
     timeLeft = TURN_LENGTH;
     var location = voteCounter.getSpotWithMostVotes(whosTurn);
@@ -85,7 +94,7 @@ setInterval(function() {
   }
 }, 1000);
 
-var server = app.listen(port, function() {
+var server = http.listen(port, function() {
   console.log('Battleship server listening at %s', port);
   battleship.startNewGame();
   gameover = 0;
