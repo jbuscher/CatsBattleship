@@ -156,16 +156,10 @@
     }
 
 
-   /* setInterval(function(){ 
-        timeLeft--;
-        $("#timer").html(timeLeft);
-        if(timeLeft == 0) {
-            timeLeft = turnLength;
-            whosTurn = whosTurn % 2 + 1;
-            $("#turn_marker").html(whosTurn);
-            connection.getBoardState(updateBoardStateFunction);
-        }
-    }, 1000);*/
+   function gameover(winner) {
+
+   }
+
 
     var socket = io();
     //Handle Timer
@@ -175,6 +169,7 @@
 
     //Handle game state
     socket.on('gameState', function(data) {
+        connection.getBoardState(updateBoardStateFunction);
         console.log(data);
         $("#turn_marker").html(data.turn);
         var x = data.location % 10
@@ -188,6 +183,9 @@
             $("#y").html(y);
         }
         
+        if(data.gameover > 0) {
+            gameover(data.gameover);
+        }
     });
 
 })();
