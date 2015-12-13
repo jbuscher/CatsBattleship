@@ -189,7 +189,8 @@
     socket.on('indyVote', function(data) {
         var loc = data.location;
         var count = data.voteCount;
-        $("#" + (loc+1) + "enemyBoard").html("" + count);
+        if(data.team == thisTeam)
+            $("#" + (loc+1) + "enemyBoard").html("" + count);
     });
 
     //Handle game state, only called at end of turn
