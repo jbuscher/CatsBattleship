@@ -13,6 +13,8 @@ module.exports = {
 
 
     startNewGame: function() {
+        this.teamOneGameBoard = [];
+        this.teamTwoGameBoard = [];
         this.setBoard(1);
         this.setBoard(2);
         this.setUpShips(1);

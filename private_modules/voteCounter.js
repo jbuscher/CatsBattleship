@@ -49,6 +49,24 @@ module.exports = {
 
     calculateIndexOfMaxIndex: function(teamNum) {
         return 2 * (teamNum - 1) + 1;
-    }
+    },
+
+    getVoteCountAt: function(team, location) {
+        var array = this.pickTeamArray(team);
+        return array[location];
+    },
+
+    getVoteCounts: function() {
+        var result = [];
+        var array = this.pickTeamArray(1);
+        for(var i = 0; i < this.NUM_SPOTS; i++) {
+            result.push(array[i]);
+        }
+        var array2 = this.pickTeamArray(2);
+        for(var i = 0; i < this.NUM_SPOTS; i++) {
+            result.push(array2[i]);
+        }
+        return result;
+    },
 
 }

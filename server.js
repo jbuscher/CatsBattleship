@@ -17,7 +17,7 @@ var voteCounter = require('./private_modules/voteCounter.js');
 var port = 8080;
 var teamNum = 1;
 var whosTurn = 0;
-var TURN_LENGTH = 11; //in seconds
+var TURN_LENGTH = 5; //in seconds
 var gameover;
 
 //App config
@@ -34,11 +34,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // socket connections
 io.on('connection', function(socket){
   console.log('a user connected');
-  socket.send(whosTurn);
+  socket.send({turn:whosTurn, votes:voteCounter.getVoteCounts()});
   socket.on('disconnect', function(){
     console.log('user disconnected');
   });
+
+  socket.on('vote', function(data) {
+    var team = data.team;
+    var location = data.location
+    console.log("Received Location = " + location);
+    voteCounter.vote(team, location);
+    io.sockets.emit('indyVote', {location:location, voteCount: voteCounter.getVoteCountAt(team, location)});
+  });
 });
+
+
 
 /*
 Alternates the assignment of a team to the user, remembers user via cookies
@@ -61,13 +71,6 @@ app.post('/boardState', function(request, response) {
   response.send(battleship.getBoardState(team));
 });
 
-app.post('/sendVote', function(request, response) {
-  var team = request.session.team;
-  var location = request.body.location - 1;
-  voteCounter.vote(team, location);
-  response.send(200);  
-});
-
 var timeLeft; //set turn length
 setInterval(function() {  
   timeLeft--;
@@ -78,13 +81,13 @@ setInterval(function() {
     voteCounter.clearVotes(whosTurn);
     console.log("Team " + whosTurn + " shot at location:"+ location);
 
+    var enemyTeam = whosTurn % 2 + 1;
     if(location == -1) {
-      location = battleship.chooseValidLocation();
+      location = battleship.chooseValidLocation(enemyTeam);
     }
 
     var x = Math.floor(location / 10);
     var y = location % 10;
-    var enemyTeam = whosTurn % 2 + 1;
     battleship.takeShot(enemyTeam, x, y);
     var hit_miss = battleship.getLocationState(enemyTeam, x, y);
 

@@ -21,11 +21,6 @@ Connection = function(){
         });
     }
 
-    this.postVote = function(id) {
-        $.post(url + "/sendVote", { location: parseInt(id)},function(data, status) {
-            console.log("post vote" + status);
-        });
-    }
 
     this.getGameInfo = function(callback) {
         $.get(url + "/gameInfo", function(data, status) {
