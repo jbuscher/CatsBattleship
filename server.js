@@ -44,7 +44,7 @@ io.on('connection', function(socket){
     var location = data.location
     console.log("Received Location = " + location);
     voteCounter.vote(team, location);
-    io.sockets.emit('indyVote', {location:location, voteCount: voteCounter.getVoteCountAt(team, location)});
+    io.sockets.emit('indyVote', {location:location, voteCount: voteCounter.getVoteCountAt(team, location)}, team:team);
   });
 });
 
