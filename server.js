@@ -17,7 +17,7 @@ var voteCounter = require('./private_modules/voteCounter.js');
 var port = 8080;
 var teamNum = 1;
 var whosTurn = 0;
-var TURN_LENGTH = 11; //in seconds
+var TURN_LENGTH = 5; //in seconds
 var gameover;
 
 //App config

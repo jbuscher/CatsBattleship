@@ -21,7 +21,8 @@
         //Click handler for cells
         for(var i = 1; i <= ROWS*COLS; i++) {
             $("#" + i + "enemyBoard").click(function() {
-                socket.emit('vote', {team:thisTeam, location:parseInt(this.id)-1});
+                if(this.className.split(" ")[0] == "sea")
+                    socket.emit('vote', {team:thisTeam, location:parseInt(this.id)-1});
                 //connection.postVote(this.id);
                 // $("#vote").html(parseInt(this.id));
                 // var elem = $("#" + i + "enemyBoard");
