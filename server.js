@@ -17,7 +17,7 @@ var voteCounter = require('./private_modules/voteCounter.js');
 var port = 8080;
 var teamNum = 1;
 var whosTurn = 0;
-var TURN_LENGTH = 6; //in seconds
+var TURN_LENGTH = 11; //in seconds
 var gameover;
 
 //App config
@@ -41,7 +41,8 @@ io.on('connection', function(socket){
 
   socket.on('vote', function(data) {
     var team = data.team;
-    var location = data.location;
+    var location = data.location
+    console.log("Received Location = " + location);
     voteCounter.vote(team, location);
     io.sockets.emit('indyVote', {location:location, voteCount: voteCounter.getVoteCountAt(team, location)});
   });

@@ -21,7 +21,7 @@
         //Click handler for cells
         for(var i = 1; i <= ROWS*COLS; i++) {
             $("#" + i + "enemyBoard").click(function() {
-                socket.emit('vote', {team:thisTeam, location:parseInt(this.id)});
+                socket.emit('vote', {team:thisTeam, location:parseInt(this.id)-1});
                 //connection.postVote(this.id);
                 // $("#vote").html(parseInt(this.id));
                 // var elem = $("#" + i + "enemyBoard");
@@ -54,54 +54,55 @@
             var state = boards[i+99];
             //$("#" + i + "enemyBoard").html(state);
             var td = $("#" + i + "enemyBoard")[0];
-            td.className = "sea";
+            var type = " enemy";
+            td.className = "sea" + type;
             if (state == 12) {
-                td.className = "miss";
+                td.className = "miss" + type;
             } else if (state % 2 == 0) {
-                td.className = "hit";
+                td.className = "hit" + type;
                 if (sunk2 && state == 8) {
-                    td.className = "pointer2";
+                    td.className = "pointer2" + type;
                 }
 
                 if (sunk3a && state == 6) {
-                    td.className = "pointer3a";
+                    td.className = "pointer3a" + type;
                 }
 
                 if (sunk3b && state == 4) {
-                    td.className = "pointer3b";
+                    td.className = "pointer3b" + type;
                 }
 
                 if (sunk4 && state == 2) {
-                    td.className = "pointer4";
+                    td.className = "pointer4" + type;
                 }
 
                 if (sunk5 && state == 0) {
-                    td.className = "pointer5";
+                    td.className = "pointer5" + type;
                 }
             }
         }
-
+        type = " team";
         for (var i = 1; i <= ROWS*COLS; i++) {
             var state = boards[i-1];
             $("#" + i + "teamBoard").html(state);
             var td = $("#" + i + "teamBoard")[0];
             if (state == 9) {
-                td.className = "pointer2";
+                td.className = "pointer2" + type;
             } else if (state == 7){
-                td.className = "pointer3a";
+                td.className = "pointer3a" + type;
             } else if (state == 5){
-                td.className = "pointer3b";
+                td.className = "pointer3b" + type;
             } else if (state == 3){
-                td.className = "pointer4";
+                td.className = "pointer4" + type;
             } else if (state == 1){
-                td.className = "pointer5";
+                td.className = "pointer5" + type;
             } else {
-                td.className = "sea";
+                td.className = "sea" + type;
             }
             if (state == 12) {
-                td.className = "miss";
+                td.className = "miss" + type;
             } else if (state % 2 == 0) {
-                td.className = "hit";
+                td.className = "hit" + type;
             }
         }
     };
@@ -161,11 +162,22 @@
         alert("Game Over!!!! Team " + winner);
     }
 
+    function clearVotes() {
+        var tds = $(".enemy");
+        for(var i = 0; i < tds.length; i++) {
+            tds[i].innerHTML = "0";
+        }   
+    }
+
 
     socket.on('message', function(message) {
-        console.log(message);
         var turn_text = message.turn == thisTeam ? "Your" : "Enemy";
         $("#turn_marker").html(turn_text);
+
+        var tds = $(".enemy");
+        for(var i = 0; i < tds.length; i++) {
+            tds[i].innerHTML = message.votes[i];
+        }  
     })
 
     //Handle Timer
@@ -174,11 +186,16 @@
     });
 
     socket.on('indyVote', function(data) {
-        console.log(data);
+        var loc = data.location;
+        var count = data.voteCount;
+        $("#" + (loc+1) + "enemyBoard").html("" + count);
     });
 
-    //Handle game state
+    //Handle game state, only called at end of turn
     socket.on('gameState', function(data) {
+        if(thisTeam != data.turn)
+            clearVotes();
+
         connection.getBoardState(updateBoardStateFunction);
         var turn_text = data.turn == thisTeam ? "Your" : "Enemy";
         $("#turn_marker").html(turn_text);
@@ -186,7 +203,6 @@
         if(data.location >= 0 && data.hit_miss > 0) {
             var x = data.location % 10
             var y = Math.floor(data.location / 10);
-
 
             var hit_text = data.hit_miss == 12 ? "MISS" : "HIT";
 
