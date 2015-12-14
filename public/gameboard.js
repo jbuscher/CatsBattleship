@@ -24,8 +24,7 @@
         for(var i = 1; i <= ROWS*COLS; i++) {
             $("#" + i + "enemyBoard").click(function() {
                 if(this.className.split(" ")[0] == "sea") {
-		    start = date.getTime();
-		    console.log(start);
+                    start = Date.now();
                     socket.emit('vote', {team:thisTeam, location:parseInt(this.id)-1});
                 }
 
@@ -202,7 +201,7 @@
         if(data.team == thisTeam)
             $("#" + (loc+1) + "enemyBoard").html("" + count);
 
-        var end = date.getTime();
+        var end = Date.now();
         console.log(end);
         console.log(end - start);
     });
