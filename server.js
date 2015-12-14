@@ -14,7 +14,7 @@ var battleship = require('./private_modules/battleship.js');
 var voteCounter = require('./private_modules/voteCounter.js');
 
 //Globals
-var port = 8080;
+var port = 80;
 var teamNum = 1;
 var whosTurn = 0;
 var TURN_LENGTH = 11; //in seconds
