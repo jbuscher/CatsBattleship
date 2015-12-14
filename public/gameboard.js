@@ -7,6 +7,8 @@
     var thisTeam;
     var turnLength;
     var socket = io();
+    var date = new Date();
+    var start;
 
     $(document).ready(function() {
         buildGameBoard(ROWS, COLS, "teamBoard");
@@ -21,8 +23,11 @@
         //Click handler for cells
         for(var i = 1; i <= ROWS*COLS; i++) {
             $("#" + i + "enemyBoard").click(function() {
-                if(this.className.split(" ")[0] == "sea")
+                if(this.className.split(" ")[0] == "sea") {
                     socket.emit('vote', {team:thisTeam, location:parseInt(this.id)-1});
+                    start = date.getTime();
+                }
+
                 //connection.postVote(this.id);
                 // $("#vote").html(parseInt(this.id));
                 // var elem = $("#" + i + "enemyBoard");
@@ -195,6 +200,7 @@
         var count = data.voteCount;
         if(data.team == thisTeam)
             $("#" + (loc+1) + "enemyBoard").html("" + count);
+        console.log(date.getTime() - start);
     });
 
     //Handle game state, only called at end of turn
