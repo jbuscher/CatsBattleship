@@ -85,7 +85,7 @@
         type = " team";
         for (var i = 1; i <= ROWS*COLS; i++) {
             var state = boards[i-1];
-            $("#" + i + "teamBoard").html(state);
+    //        $("#" + i + "teamBoard").html(state);
             var td = $("#" + i + "teamBoard")[0];
             if (state == 9) {
                 td.className = "pointer2" + type;
