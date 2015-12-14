@@ -24,8 +24,9 @@
         for(var i = 1; i <= ROWS*COLS; i++) {
             $("#" + i + "enemyBoard").click(function() {
                 if(this.className.split(" ")[0] == "sea") {
+		    start = date.getTime();
+		    console.log(start);
                     socket.emit('vote', {team:thisTeam, location:parseInt(this.id)-1});
-                    start = date.getTime();
                 }
 
                 //connection.postVote(this.id);
@@ -200,7 +201,9 @@
         var count = data.voteCount;
         if(data.team == thisTeam)
             $("#" + (loc+1) + "enemyBoard").html("" + count);
-        console.log(date.getTime() - start);
+        var end = date.getTime();
+        console.log(end);
+        console.log(end - start);
     });
 
     //Handle game state, only called at end of turn
