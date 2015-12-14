@@ -42,7 +42,6 @@ io.on('connection', function(socket){
   socket.on('vote', function(data) {
     var team = data.team;
     var location = data.location
-    console.log("Received Location = " + location);
     voteCounter.vote(team, location);
     io.sockets.emit('indyVote', {location:location, voteCount: voteCounter.getVoteCountAt(team, location), team:team});
   });
@@ -79,7 +78,6 @@ setInterval(function() {
     timeLeft = TURN_LENGTH;
     var location = voteCounter.getSpotWithMostVotes(whosTurn);
     voteCounter.clearVotes(whosTurn);
-    console.log("Team " + whosTurn + " shot at location:"+ location);
 
     var enemyTeam = whosTurn % 2 + 1;
     if(location == -1) {

@@ -160,7 +160,11 @@
 
 
     function gameover(winner) {
-        alert("Game Over!!!! Team " + winner);
+        if(thisTeam == winner) {
+            alert("Your team wins!!!")
+        } else {
+            alert("Your team loses!!!")
+        }
     }
 
     function clearVotes() {

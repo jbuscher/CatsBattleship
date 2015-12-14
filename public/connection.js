@@ -9,14 +9,14 @@ Connection = function(){
 
     this.getTeam = function(callback) {
         $.get(url + "/getTeam", function(data, status) {
-            console.log("Team request" + status);
+            console.log("Team request " + status);
             callback(data);
         });
     }
 
     this.getBoardState = function(callback) {
         $.post(url + "/boardState", function(data, status) {
-            console.log("board state request" + status);
+            console.log("board state request " + status);
             callback(data);
         });
     }
