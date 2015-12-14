@@ -42,6 +42,9 @@ io.on('connection', function(socket){
   socket.on('vote', function(data) {
     var team = data.team;
     var location = data.location
+    var time = data.time;
+    var date = new Date();
+    console.log(date.getTime() - time);
     voteCounter.vote(team, location);
     io.sockets.emit('indyVote', {location:location, voteCount: voteCounter.getVoteCountAt(team, location), team:team});
   });
