@@ -14,7 +14,7 @@ td {
 	background-size: cover;
 }
 
-.sea:hover {
+.enemy:hover {
 	border-color: red;
 	cursor: crosshair;
 }
